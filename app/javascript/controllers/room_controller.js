@@ -23,18 +23,40 @@ export default class extends Controller {
 
   static values = {
     tokenUrl: String,
-    userName: String
+    userName: String,
+    toolPath: String
   }
 
   connect() {
+    // Reconnecting after DOM move (turbo-permanent preservation)
+    if (this.element._liveKitRoom) {
+      this.room = this.element._liveKitRoom
+      this.LiveKitTrack = this.element._liveKitTrack
+      this._showInCall()
+      this._renderLocalParticipant()
+      this._renderExistingParticipants()
+      this.updateParticipantCount()
+      return
+    }
+
+    // Server-rendered duplicate — persistent room has the real element
+    const persistentCtrl = this._persistentRoomController()
+    if (persistentCtrl?.active && persistentCtrl.roomElement !== this.element) {
+      this._isDuplicate = true
+      return
+    }
+
+    // Normal first connect
     this.previewStream = null
     this._boundDeviceChange = () => this._enumerateDevices()
     navigator.mediaDevices?.addEventListener("devicechange", this._boundDeviceChange)
-    // Enumerate first (may get devices without labels), then request access for preview + labels
     this._enumerateDevices().then(() => this._requestDeviceAccess())
   }
 
   disconnect() {
+    if (this._isDuplicate) return
+    if (this.element._liveKitRoom) return // Being moved, skip cleanup
+
     this._stopPreview()
     navigator.mediaDevices?.removeEventListener("devicechange", this._boundDeviceChange)
   }
@@ -80,6 +102,13 @@ export default class extends Controller {
       this._syncSelect(this.settingsVideoSelectTarget, this.videoSelectTarget)
     }
 
+    // Store LiveKit state on DOM element (survives Stimulus re-instantiation)
+    this.element._liveKitRoom = this.room
+    this.element._liveKitTrack = this.LiveKitTrack
+
+    // Register with persistent room controller
+    this._persistentRoomController()?.activate(this.element, this.toolPathValue)
+
     this._showInCall()
     this._renderLocalParticipant()
     this._renderExistingParticipants()
@@ -89,6 +118,13 @@ export default class extends Controller {
   leave() {
     this.room?.disconnect()
     this.room = null
+
+    // Clear DOM-stored state
+    delete this.element._liveKitRoom
+    delete this.element._liveKitTrack
+
+    // Deregister from persistent room controller
+    this._persistentRoomController()?.deactivate()
 
     this.videoGridTarget.innerHTML = ""
     this._clearLocalVideo()
@@ -233,6 +269,11 @@ export default class extends Controller {
 
   // ── Private ──────────────────────────────────────────────────────────────
 
+  _persistentRoomController() {
+    const el = document.getElementById("persistent-room")
+    return el && this.application.getControllerForElementAndIdentifier(el, "persistent-room")
+  }
+
   async _requestDeviceAccess() {
     try {
       this.previewStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
@@ -275,7 +316,6 @@ export default class extends Controller {
   }
 
   _syncSelect(target, source) {
-    // Copy options and selected value from source to target
     target.innerHTML = source.innerHTML
     target.value = source.value
   }

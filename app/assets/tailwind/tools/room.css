@@ -3,4 +3,52 @@
     min-height: 200px;
     aspect-ratio: 16 / 9;
   }
+
+  /* ── Persistent room PiP ─────────────────────────────────────────── */
+
+  .persistent-room-pip {
+    @apply fixed bottom-4 right-4 z-30 w-80 rounded-xl overflow-hidden
+           shadow-lg border border-border-light bg-surface;
+  }
+
+  .persistent-room-pip .tool-topbar,
+  .persistent-room-pip [data-room-target="preJoin"],
+  .persistent-room-pip [data-room-target="videoGrid"] {
+    @apply hidden;
+  }
+
+  .persistent-room-pip [data-room-target="inCall"] {
+    @apply flex-none h-auto overflow-visible;
+  }
+
+  .persistent-room-pip [data-room-target="localVideo"] {
+    @apply relative w-full rounded-none border-none shadow-none;
+    bottom: auto;
+    right: auto;
+  }
+
+  /* "Return to call" banner */
+  .persistent-room-return-banner {
+    @apply flex items-center justify-between px-3 py-1.5 bg-accent text-white text-xs font-medium
+           hover:bg-accent-hover transition-colors cursor-pointer no-underline;
+  }
+
+  /* Sidebar "in call" indicator */
+  .sidebar-tool-item[data-in-call]::after {
+    @apply w-2 h-2 rounded-full bg-success shrink-0;
+    content: "";
+    animation: pulse-call 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-call {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+}
+
+/* Mobile: smaller PiP */
+@media (max-width: 1023px) {
+  .persistent-room-pip {
+    @apply w-64 bottom-2 right-2;
+  }
 }

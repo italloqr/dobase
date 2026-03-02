@@ -3,7 +3,9 @@
 <div class="tool-layout flex flex-col h-full overflow-hidden"
      data-controller="room"
      data-room-token-url-value="<%= tool_room_tokens_path(@tool) %>"
-     data-room-user-name-value="<%= current_user.name %>">
+     data-room-user-name-value="<%= current_user.name %>"
+     data-room-tool-path-value="<%= tool_room_path(@tool) %>"
+     data-persistent-room-placeholder>
 
   <%= render "components/tool_topbar", title: @tool.name, tool: @tool do %>
     <div class="flex items-center gap-1.5 text-sm text-text-secondary">
