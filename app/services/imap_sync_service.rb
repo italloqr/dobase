@@ -156,12 +156,9 @@ class ImapSyncService
   end
 
   def fetch_recent_emails(imap, folder_name, limit)
-    # Get message count
-    message_count = imap.status(imap.responses["EXISTS"]&.last || folder_name, [ "MESSAGES" ])["MESSAGES"] rescue imap.responses["EXISTS"]&.last || 0
-
+    message_count = imap.status(folder_name, [ "MESSAGES" ])["MESSAGES"]
     return if message_count.nil? || message_count == 0
 
-    # Fetch the most recent emails - use BODY[] to get the full RFC822 message
     start_seq = [ message_count - limit + 1, 1 ].max
     range = start_seq..message_count
 

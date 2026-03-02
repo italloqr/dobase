@@ -10,10 +10,10 @@ class SyncEmailsJob < ApplicationJob
     service = ::ImapSyncService.new(mail_account)
     service.sync_folders
     service.sync_inbox(limit: 50)
-    service.sync_sent(limit: 20)
+    service.sync_sent(limit: 50)
 
     mail_account.custom_folders.each do |folder|
-      service.sync_folder(folder, limit: 20)
+      service.sync_folder(folder, limit: 50)
     end
   rescue ::ImapSyncService::ConnectionError, ::ImapSyncService::AuthenticationError => e
     Rails.logger.error("Mail sync failed for account #{mail_account_id}: #{e.message}")
