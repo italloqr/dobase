@@ -353,7 +353,7 @@
         </div>
       </div>
 
-      <div class="overflow-y-auto p-4">
+      <div class="overflow-y-auto p-4" id="email-body-<%= @selected_message.id %>" data-turbo-permanent>
         <% @conversation_messages.each_with_index do |msg, index| %>
           <%= render "tools/mails/email_message",
                 email_message: msg,

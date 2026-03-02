@@ -44,9 +44,7 @@ export default class extends Controller {
         headers: { "X-CSRF-Token": csrfToken(), "Accept": "text/html" },
         credentials: "same-origin"
       })
-      // Skip page refresh when reading an email — morph destroys the iframe
-      const hasSelectedEmail = new URLSearchParams(location.search).has("selected")
-      if (res.ok && !hasSelectedEmail) Turbo.visit(location.href, { action: "replace" })
+      if (res.ok) Turbo.visit(location.href, { action: "replace" })
     } catch (e) {
       console.error("Mail sync failed:", e)
     } finally {
