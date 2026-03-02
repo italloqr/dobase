@@ -105,9 +105,9 @@ export default class extends Controller {
   _handleBeforeMorphElement(event) {
     if (!this._active) return
 
-    // Protect #persistent-room and its children from being morphed away
+    // Protect #persistent-room and all its descendants from being morphed away
     // (morphing doesn't respect data-turbo-permanent)
-    if (event.target === this.element || event.target === this._roomElement) {
+    if (this.element.contains(event.target)) {
       event.preventDefault()
     }
   }
@@ -119,18 +119,28 @@ export default class extends Controller {
     const placeholder = newBody.querySelector("[data-persistent-room-placeholder]")
 
     if (placeholder && this.element.contains(this._roomElement)) {
-      // Navigating BACK to the room page — move element into the new body
+      // Navigating BACK to the room page — restore element into the new body
       this._roomElement.classList.remove("persistent-room-pip")
       this._resetPosition()
       placeholder.replaceWith(this._roomElement)
       this._removeReturnBanner()
       this.element.hidden = true
     } else if (!this.element.contains(this._roomElement)) {
-      // Room element is still in <main> — navigating AWAY from the room page
+      // Room element is still in <main> — navigating AWAY from the room page for the first time
       this._roomElement.classList.add("persistent-room-pip")
       this.element.appendChild(this._roomElement)
       this._addReturnBanner()
       this.element.hidden = false
+    } else {
+      // Already in PiP — navigating between non-room pages (e.g. clicking emails)
+      // Move room + banner into the new body's persistent container so they survive the body swap
+      const newContainer = newBody.querySelector("#persistent-room")
+      if (newContainer) {
+        const banner = this.element.querySelector("[data-return-banner]")
+        if (banner) newContainer.appendChild(banner)
+        newContainer.appendChild(this._roomElement)
+        newContainer.hidden = false
+      }
     }
   }
 
