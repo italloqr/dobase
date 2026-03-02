@@ -131,17 +131,9 @@ export default class extends Controller {
       this.element.appendChild(this._roomElement)
       this._addReturnBanner()
       this.element.hidden = false
-    } else {
-      // Already in PiP — navigating between non-room pages (e.g. clicking emails)
-      // Move room + banner into the new body's persistent container so they survive the body swap
-      const newContainer = newBody.querySelector("#persistent-room")
-      if (newContainer) {
-        const banner = this.element.querySelector("[data-return-banner]")
-        if (banner) newContainer.appendChild(banner)
-        newContainer.appendChild(this._roomElement)
-        newContainer.hidden = false
-      }
     }
+    // When already in PiP (room inside #persistent-room), do nothing —
+    // data-turbo-permanent preserves the container automatically
   }
 
   _handleRender() {
