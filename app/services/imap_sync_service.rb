@@ -181,7 +181,7 @@ class ImapSyncService
 
     from = envelope.from&.first
     from_address = from ? "#{from.mailbox}@#{from.host}" : nil
-    from_name = from&.name
+    from_name = safe_utf8(from&.name)
 
     to_list = (envelope.to || []).map { |addr| "#{addr.mailbox}@#{addr.host}" }
     cc_list = (envelope.cc || []).map { |addr| "#{addr.mailbox}@#{addr.host}" }
@@ -212,18 +212,18 @@ class ImapSyncService
     email.assign_attributes(
       folder: folder_name,
       uid: uid,
-      subject: envelope.subject,
+      subject: safe_utf8(envelope.subject),
       from_address: from_address,
       from_name: from_name,
       to_addresses: to_list.to_json,
       cc_addresses: cc_list.to_json,
-      body_plain: parsed[:plain],
-      body_html: parsed[:html],
+      body_plain: safe_utf8(parsed[:plain]),
+      body_html: safe_utf8(parsed[:html]),
       read: flags.include?(:Seen),
       starred: flags.include?(:Flagged),
       sent_at: sent_at,
-      in_reply_to: in_reply_to,
-      references: references_str,
+      in_reply_to: safe_utf8(in_reply_to),
+      references: safe_utf8(references_str),
       has_attachments: has_attachments
     )
     email.save!
@@ -403,5 +403,10 @@ class ImapSyncService
   def find_sent_folder_from_list(folders)
     sent_names = [ "Sent", "INBOX.Sent", "[Gmail]/Sent Mail", "Sent Messages", "Sent Items" ]
     sent_names.find { |name| folders.include?(name) }
+  end
+
+  def safe_utf8(str)
+    return nil if str.nil?
+    str.encode("UTF-8", invalid: :replace, undef: :replace, replace: "\uFFFD")
   end
 end
