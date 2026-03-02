@@ -228,8 +228,8 @@ class ImapSyncService
     )
     email.save!
 
-    # Download and store attachments for new emails
-    if is_new_email && has_attachments
+    # Download attachments for new emails, or existing ones missing attachments
+    if has_attachments && (is_new_email || email.attachments.empty?)
       download_attachments(imap, uid, email, attachment_parts)
     end
 
@@ -350,7 +350,7 @@ class ImapSyncService
       begin
         # Fetch the specific part
         fetch_key = "BODY.PEEK[#{part_info[:part_number]}]"
-        data = imap.fetch(uid, fetch_key)&.first
+        data = imap.uid_fetch(uid, fetch_key)&.first
         next unless data
 
         raw_content = data.attr["BODY[#{part_info[:part_number]}]"]
