@@ -224,7 +224,8 @@ class ImapSyncService
       sent_at: sent_at,
       in_reply_to: safe_utf8(in_reply_to),
       references: safe_utf8(references_str),
-      has_attachments: has_attachments
+      has_attachments: has_attachments,
+      thread_id: nil
     )
     email.save!
 

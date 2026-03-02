@@ -126,22 +126,37 @@ module Mails
     def set_thread_id
       return if thread_id.present?
 
+      # Try in_reply_to parent first
       if in_reply_to.present?
         parent = account.messages.find_by(message_id: in_reply_to)
-        self.thread_id = parent&.thread_id || in_reply_to
-      elsif self.references.present?
+        if parent&.thread_id.present?
+          self.thread_id = parent.thread_id
+          return
+        end
+      end
+
+      # Check references chain (first match wins, first ref is the thread root)
+      if self.references.present?
         ref_ids = self.references.to_s.split(/\s+/)
         ref_ids.each do |ref_id|
           parent = account.messages.find_by(message_id: ref_id)
           if parent&.thread_id.present?
             self.thread_id = parent.thread_id
-            break
+            return
           end
         end
-        self.thread_id ||= ref_ids.first
-      else
-        self.thread_id = Digest::MD5.hexdigest("#{mail_account_id}:#{normalized_subject.downcase}")
+        self.thread_id = ref_ids.first
+        return
       end
+
+      # No references — use in_reply_to as thread anchor
+      if in_reply_to.present?
+        self.thread_id = in_reply_to
+        return
+      end
+
+      # No threading headers — group by normalized subject
+      self.thread_id = Digest::MD5.hexdigest("#{mail_account_id}:#{normalized_subject.downcase}")
     end
   end
 end
