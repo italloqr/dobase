@@ -9,8 +9,10 @@ export default class extends Controller {
 
     this._onBeforeRender = this._handleBeforeRender.bind(this)
     this._onRender = this._handleRender.bind(this)
+    this._onBeforeMorphEl = this._handleBeforeMorphElement.bind(this)
     document.addEventListener("turbo:before-render", this._onBeforeRender)
     document.addEventListener("turbo:render", this._onRender)
+    document.addEventListener("turbo:before-morph-element", this._onBeforeMorphEl)
 
     if (this._active) this._applySidebarIndicator()
   }
@@ -18,6 +20,7 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("turbo:before-render", this._onBeforeRender)
     document.removeEventListener("turbo:render", this._onRender)
+    document.removeEventListener("turbo:before-morph-element", this._onBeforeMorphEl)
   }
 
   // Called by room_controller on join
@@ -98,6 +101,16 @@ export default class extends Controller {
   }
 
   // ── Private ──────────────────────────────────────────────────────────
+
+  _handleBeforeMorphElement(event) {
+    if (!this._active) return
+
+    // Protect #persistent-room and its children from being morphed away
+    // (morphing doesn't respect data-turbo-permanent)
+    if (event.target === this.element || event.target === this._roomElement) {
+      event.preventDefault()
+    }
+  }
 
   _handleBeforeRender(event) {
     if (!this._active || !this._roomElement) return
