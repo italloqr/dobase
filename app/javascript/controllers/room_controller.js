@@ -123,7 +123,6 @@ export default class extends Controller {
     // Move into persistent container
     const container = document.getElementById("persistent-room")
     if (container && !container.contains(this.element)) {
-      document.querySelector("[data-persistent-room-placeholder]")?.setAttribute("hidden", "")
       container.hidden = false
       container.appendChild(this.element)
       // appendChild triggers disconnect/connect → reconnect branch handles UI
@@ -290,11 +289,8 @@ export default class extends Controller {
   // ── Private ──────────────────────────────────────────────────────────────
 
   _updateMode() {
-    const onRoomPage = !!document.querySelector("[data-persistent-room-placeholder]")
+    const onRoomPage = window.location.pathname === this.toolPathValue
     this.modeValue = onRoomPage ? "full" : "pip"
-    if (onRoomPage) {
-      document.querySelector("[data-persistent-room-placeholder]")?.setAttribute("hidden", "")
-    }
   }
 
   _applySidebarIndicator() {
