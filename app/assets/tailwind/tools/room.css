@@ -17,7 +17,7 @@
   /* ── Room mode: PiP ────────────────────────────────────────────── */
 
   [data-room-mode-value="pip"] {
-    @apply fixed bottom-4 right-4 z-30 w-80 h-auto! rounded-xl overflow-hidden!
+    @apply fixed bottom-4 right-4 z-30 w-52 h-auto! rounded-xl overflow-hidden!
            shadow-lg border border-border-light bg-surface;
   }
 
@@ -44,7 +44,7 @@
 
   /* Compact controls bar in PiP */
   [data-room-mode-value="pip"] [data-room-target="inCall"] > :last-child {
-    @apply py-2 px-3 gap-1;
+    @apply py-1.5 px-2 gap-0.5;
   }
 
   /* ── Sidebar "in call" indicator ───────────────────────────────── */
@@ -64,7 +64,7 @@
 /* Mobile adjustments */
 @media (max-width: 1023px) {
   [data-room-mode-value="pip"] {
-    @apply w-64 bottom-2 right-2;
+    @apply w-44 bottom-2 right-2;
   }
 
   [data-room-mode-value="full"] {

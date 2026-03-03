@@ -41,6 +41,7 @@ export default class extends Controller {
       this._updateEmptyState()
       this._updateMode()
       this._applySidebarIndicator()
+      this._listenForNavigation()
       return
     }
 
@@ -65,6 +66,7 @@ export default class extends Controller {
     if (this._isDuplicate) return
     if (this.element._liveKitRoom) return // Being moved, skip cleanup
 
+    this._stopNavigationListener()
     this._stopPreview()
     navigator.mediaDevices?.removeEventListener("devicechange", this._boundDeviceChange)
   }
@@ -137,8 +139,9 @@ export default class extends Controller {
     delete this.element._liveKitRoom
     delete this.element._liveKitTrack
 
-    // Clear mode, hide container
+    // Clear mode, hide container, stop listening
     this.modeValue = ""
+    this._stopNavigationListener()
     const container = document.getElementById("persistent-room")
     if (container) container.hidden = true
     this._removeSidebarIndicator()
@@ -288,9 +291,32 @@ export default class extends Controller {
 
   // ── Private ──────────────────────────────────────────────────────────────
 
+  _listenForNavigation() {
+    if (this._onTurboRender) return
+    this._onTurboRender = () => {
+      if (!this.element._liveKitRoom) return
+      this._updateMode()
+      this._applySidebarIndicator()
+    }
+    document.addEventListener("turbo:render", this._onTurboRender)
+  }
+
+  _stopNavigationListener() {
+    if (this._onTurboRender) {
+      document.removeEventListener("turbo:render", this._onTurboRender)
+      this._onTurboRender = null
+    }
+  }
+
   _updateMode() {
     const onRoomPage = window.location.pathname === this.toolPathValue
     this.modeValue = onRoomPage ? "full" : "pip"
+    // Hide server-rendered duplicate when returning to room page
+    if (onRoomPage) {
+      for (const el of document.querySelectorAll("[data-persistent-room-placeholder]")) {
+        if (el !== this.element) el.hidden = true
+      }
+    }
   }
 
   _applySidebarIndicator() {
