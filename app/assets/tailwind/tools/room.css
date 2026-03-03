@@ -10,6 +10,12 @@
     @apply flex flex-col h-full overflow-hidden;
   }
 
+  /* ── Pre-join ─────────────────────────────────────────────────── */
+
+  .room-pre-join {
+    @apply flex-1 flex flex-col items-center justify-center gap-6 p-6;
+  }
+
   /* ── In-call layout ───────────────────────────────────────────── */
 
   .room-in-call {
@@ -55,7 +61,7 @@
            shadow-lg border border-border-light bg-surface;
   }
 
-  [data-room-mode-value="pip"] [data-room-target="preJoin"],
+  [data-room-mode-value="pip"] .room-pre-join,
   [data-room-mode-value="pip"] [data-room-target="videoGrid"],
   [data-room-mode-value="pip"] [data-room-target="emptyState"] {
     @apply hidden;
@@ -118,7 +124,7 @@
     @apply flex;
   }
 
-  body:has([data-room-mode-value="pip"]) .room-layout:not([data-room-mode-value]) [data-room-target="preJoin"] {
+  body:has([data-room-mode-value="pip"]) .room-layout:not([data-room-mode-value]) .room-pre-join {
     @apply hidden;
   }
 
