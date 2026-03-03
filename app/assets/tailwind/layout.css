@@ -131,7 +131,7 @@
   }
 
   /* Full-height tool layouts */
-  .main-content:has(.tool-layout) {
+  .main-content:has(> .tool-layout) {
     @apply h-dvh overflow-hidden p-0;
   }
 
@@ -177,7 +177,7 @@
     @apply ml-0! pt-11;
   }
 
-  .main-content:has(.tool-layout) {
+  .main-content:has(> .tool-layout) {
     @apply h-[calc(100dvh-2.75rem)]! min-h-0! mt-11 pt-0;
   }
 

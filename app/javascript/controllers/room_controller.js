@@ -25,11 +25,12 @@ export default class extends Controller {
   static values = {
     tokenUrl: String,
     userName: String,
-    toolPath: String
+    toolPath: String,
+    mode: { type: String, default: "" } // "", "full", or "pip"
   }
 
   connect() {
-    // Reconnecting after DOM move (turbo-permanent preservation)
+    // Reconnecting after page visit (turbo-permanent preserves parent, Stimulus reconnects)
     if (this.element._liveKitRoom) {
       this.room = this.element._liveKitRoom
       this.LiveKitTrack = this.element._liveKitTrack
@@ -38,23 +39,18 @@ export default class extends Controller {
       this._renderExistingParticipants()
       this.updateParticipantCount()
       this._updateEmptyState()
+      this._updateMode()
+      this._applySidebarIndicator()
       return
     }
 
-    // Server-rendered duplicate — persistent room has the real element.
-    // Swap this placeholder with the real room element so the call resumes.
-    const persistentCtrl = this._persistentRoomController()
-    if (persistentCtrl?.active && persistentCtrl.roomElement !== this.element) {
+    // Server-rendered duplicate — an active call exists in #persistent-room
+    const container = document.getElementById("persistent-room")
+    const existingRoom = container?.querySelector("[data-controller~='room']")
+    if (existingRoom && existingRoom !== this.element && existingRoom._liveKitRoom) {
       this._isDuplicate = true
-      const realEl = persistentCtrl.roomElement
-      realEl.classList.remove("persistent-room-pip")
-      realEl.style.left = ""
-      realEl.style.top = ""
-      realEl.style.right = ""
-      realEl.style.bottom = ""
-      this.element.replaceWith(realEl)
-      persistentCtrl.element.querySelector("[data-return-banner]")?.remove()
-      persistentCtrl.element.hidden = true
+      this.element.hidden = true
+      // The existing controller's connect() handles mode switching
       return
     }
 
@@ -118,14 +114,20 @@ export default class extends Controller {
     this.element._liveKitRoom = this.room
     this.element._liveKitTrack = this.LiveKitTrack
 
-    // Register with persistent room controller
-    this._persistentRoomController()?.activate(this.element, this.toolPathValue)
-
     this._showInCall()
     this._renderLocalParticipant()
     this._renderExistingParticipants()
     this.updateParticipantCount()
     this._updateEmptyState()
+
+    // Move into persistent container
+    const container = document.getElementById("persistent-room")
+    if (container && !container.contains(this.element)) {
+      document.querySelector("[data-persistent-room-placeholder]")?.setAttribute("hidden", "")
+      container.hidden = false
+      container.appendChild(this.element)
+      // appendChild triggers disconnect/connect → reconnect branch handles UI
+    }
   }
 
   leave() {
@@ -136,8 +138,11 @@ export default class extends Controller {
     delete this.element._liveKitRoom
     delete this.element._liveKitTrack
 
-    // Deregister from persistent room controller
-    this._persistentRoomController()?.deactivate()
+    // Clear mode, hide container
+    this.modeValue = ""
+    const container = document.getElementById("persistent-room")
+    if (container) container.hidden = true
+    this._removeSidebarIndicator()
 
     this.videoGridTarget.innerHTML = ""
     this._clearLocalVideo()
@@ -284,9 +289,22 @@ export default class extends Controller {
 
   // ── Private ──────────────────────────────────────────────────────────────
 
-  _persistentRoomController() {
-    const el = document.getElementById("persistent-room")
-    return el && this.application.getControllerForElementAndIdentifier(el, "persistent-room")
+  _updateMode() {
+    const onRoomPage = !!document.querySelector("[data-persistent-room-placeholder]")
+    this.modeValue = onRoomPage ? "full" : "pip"
+    if (onRoomPage) {
+      document.querySelector("[data-persistent-room-placeholder]")?.setAttribute("hidden", "")
+    }
+  }
+
+  _applySidebarIndicator() {
+    if (!this.toolPathValue) return
+    const link = document.querySelector(`a.sidebar-tool-item[href="${this.toolPathValue}"]`)
+    if (link) link.dataset.inCall = "true"
+  }
+
+  _removeSidebarIndicator() {
+    document.querySelectorAll("[data-in-call]").forEach(el => delete el.dataset.inCall)
   }
 
   async _requestDeviceAccess() {
