@@ -58,10 +58,8 @@
   }
 
   [data-room-mode-value="pip"] [data-room-target="localVideo"] {
-    @apply relative! w-[50px]! h-[50px]! rounded-md! border-none! shadow-none! z-auto!
-           overflow-hidden! ml-auto! mr-2! my-2!;
-    bottom: auto !important;
-    right: auto !important;
+    @apply absolute! w-[50px]! h-[50px]! rounded-md! border-none! shadow-none! z-10!
+           overflow-hidden! right-1! bottom-10!;
   }
 
   [data-room-mode-value="pip"] [data-room-target="localVideo"] video {

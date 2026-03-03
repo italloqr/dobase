@@ -131,10 +131,10 @@ export default class extends Controller {
     }
   }
 
-  leave() {
+  async leave() {
     const wasOnRoomPage = window.location.pathname === this.toolPathValue
 
-    this.room?.disconnect()
+    await this.room?.disconnect()
     this.room = null
 
     // Clear DOM-stored state
