@@ -50,6 +50,7 @@ export default class extends Controller {
     // Server-rendered duplicate — an active call exists in #persistent-room
     const container = document.getElementById("persistent-room")
     const existingRoom = container?.querySelector("[data-controller~='room']")
+    console.log("[Room] duplicate check:", { container: !!container, existingRoom: !!existingRoom, isSelf: existingRoom === this.element, hasLiveKit: !!existingRoom?._liveKitRoom, existingPath: existingRoom?.dataset?.roomToolPathValue, myPath: this.toolPathValue })
     if (existingRoom && existingRoom !== this.element && existingRoom._liveKitRoom) {
       this._isDuplicate = true
 
