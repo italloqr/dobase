@@ -7,8 +7,6 @@ export default class extends Controller {
   static targets = [
     "preJoin",
     "inCall",
-    "inAnotherCall",
-    "activeRoomLink",
     "videoGrid",
     "emptyState",
     "localVideo",
@@ -50,24 +48,9 @@ export default class extends Controller {
     // Server-rendered duplicate — an active call exists in #persistent-room
     const container = document.getElementById("persistent-room")
     const existingRoom = container?.querySelector("[data-controller~='room']")
-    console.log("[Room] duplicate check:", { container: !!container, existingRoom: !!existingRoom, isSelf: existingRoom === this.element, hasLiveKit: !!existingRoom?._liveKitRoom, existingPath: existingRoom?.dataset?.roomToolPathValue, myPath: this.toolPathValue })
     if (existingRoom && existingRoom !== this.element && existingRoom._liveKitRoom) {
       this._isDuplicate = true
-
-      // Same room: hide this duplicate (the persistent one handles mode switching)
-      if (existingRoom.dataset.roomToolPathValue === this.toolPathValue) {
-        this.element.hidden = true
-        return
-      }
-
-      // Different room: show "in another call" state
-      this.preJoinTarget.classList.add("hidden")
-      if (this.hasInAnotherCallTarget) {
-        this.inAnotherCallTarget.classList.remove("hidden")
-        if (this.hasActiveRoomLinkTarget) {
-          this.activeRoomLinkTarget.href = existingRoom.dataset.roomToolPathValue
-        }
-      }
+      this.element.hidden = true
       return
     }
 

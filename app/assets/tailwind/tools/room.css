@@ -108,6 +108,20 @@
     @apply py-0.5 px-2 gap-0.5;
   }
 
+  /* ── "In another call" state ───────────────────────────────────── */
+
+  .room-in-another-call {
+    @apply hidden flex-1 flex-col items-center justify-center text-center p-6;
+  }
+
+  body:has([data-room-mode-value="pip"]) .room-in-another-call {
+    @apply flex;
+  }
+
+  body:has([data-room-mode-value="pip"]) [data-room-target="preJoin"] {
+    @apply hidden;
+  }
+
   /* ── Sidebar "in call" indicator ───────────────────────────────── */
 
   .sidebar-tool-item[data-in-call]::after {
