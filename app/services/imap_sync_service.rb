@@ -156,7 +156,10 @@ class ImapSyncService
   end
 
   def fetch_recent_emails(imap, folder_name, limit)
-    message_count = imap.status(folder_name, [ "MESSAGES" ])["MESSAGES"]
+    # Read EXISTS count from the already-selected mailbox rather than calling
+    # imap.status which requires the exact IMAP folder name (which may differ
+    # from the normalized folder_name we use for storage, e.g. "Sent" vs "[Gmail]/Sent Mail")
+    message_count = imap.responses("EXISTS") { |a| a.last }
     return if message_count.nil? || message_count == 0
 
     start_seq = [ message_count - limit + 1, 1 ].max
