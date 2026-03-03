@@ -132,6 +132,8 @@ export default class extends Controller {
   }
 
   leave() {
+    const wasOnRoomPage = window.location.pathname === this.toolPathValue
+
     this.room?.disconnect()
     this.room = null
 
@@ -150,6 +152,13 @@ export default class extends Controller {
     this._clearLocalVideo()
     this._showPreJoin()
     this.updateParticipantCount()
+
+    // Reload room page to get fresh pre-join render
+    // (element is stuck in hidden #persistent-room, server duplicate was hidden)
+    if (wasOnRoomPage) {
+      Turbo.visit(this.toolPathValue, { action: "replace" })
+      return
+    }
 
     this._requestDeviceAccess()
   }
