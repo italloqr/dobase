@@ -59,9 +59,9 @@
   </div>
 
   <%# In-call state %>
-  <div class="hidden flex-1 flex flex-col overflow-hidden relative" data-room-target="inCall">
+  <div class="room-in-call hidden" data-room-target="inCall">
     <%# Content area (relative wrapper for local video overlay) %>
-    <div class="flex-1 relative overflow-hidden">
+    <div class="room-content-area">
       <%# Video grid (remote participants) %>
       <div class="h-full grid gap-2 p-4 overflow-hidden auto-rows-fr hidden"
            style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));"

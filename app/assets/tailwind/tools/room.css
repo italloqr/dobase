@@ -4,6 +4,16 @@
     aspect-ratio: 16 / 9;
   }
 
+  /* ── In-call layout ───────────────────────────────────────────── */
+
+  .room-in-call {
+    @apply flex-1 flex flex-col overflow-hidden relative;
+  }
+
+  .room-content-area {
+    @apply flex-1 relative overflow-hidden;
+  }
+
   /* ── Local video ─────────────────────────────────────────────── */
 
   .room-local-video {
@@ -71,8 +81,12 @@
     @apply flex;
   }
 
-  [data-room-mode-value="pip"] [data-room-target="inCall"] {
+  [data-room-mode-value="pip"] .room-in-call {
     @apply flex-none h-auto overflow-hidden;
+  }
+
+  [data-room-mode-value="pip"] .room-content-area {
+    @apply flex-none;
   }
 
   [data-room-mode-value="pip"] .room-local-video {
