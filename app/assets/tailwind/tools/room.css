@@ -57,8 +57,7 @@
 
   [data-room-mode-value="pip"] [data-room-target="preJoin"],
   [data-room-mode-value="pip"] [data-room-target="videoGrid"],
-  [data-room-mode-value="pip"] [data-room-target="emptyState"],
-  [data-room-mode-value="pip"] .room-in-another-call {
+  [data-room-mode-value="pip"] [data-room-target="emptyState"] {
     @apply hidden;
   }
 
@@ -115,11 +114,11 @@
     @apply hidden flex-1 flex-col items-center justify-center text-center p-6;
   }
 
-  body:has([data-room-mode-value="pip"]) .room-in-another-call {
+  body:has([data-room-mode-value="pip"]) .room-layout:not([data-room-mode-value]) .room-in-another-call {
     @apply flex;
   }
 
-  body:has([data-room-mode-value="pip"]) [data-room-target="preJoin"] {
+  body:has([data-room-mode-value="pip"]) .room-layout:not([data-room-mode-value]) [data-room-target="preJoin"] {
     @apply hidden;
   }
 
