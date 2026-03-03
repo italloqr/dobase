@@ -174,7 +174,7 @@ class ImapSyncService
     envelope = msg.attr["ENVELOPE"]
     return unless envelope
 
-    message_id = envelope.message_id || "#{msg.attr['UID']}@#{@account.imap_host}"
+    message_id = (envelope.message_id || "#{msg.attr['UID']}@#{@account.imap_host}").delete("<>")
     uid = msg.attr["UID"]
     flags = msg.attr["FLAGS"] || []
     body_structure = msg.attr["BODYSTRUCTURE"]
