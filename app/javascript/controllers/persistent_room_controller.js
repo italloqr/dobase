@@ -139,7 +139,21 @@ export default class extends Controller {
   }
 
   _handleRender() {
-    if (this._active) this._applySidebarIndicator()
+    if (!this._active) return
+    this._applySidebarIndicator()
+
+    // Fallback: if turbo:before-render failed to move the room element back,
+    // do it now. This handles edge cases with Turbo's permanent element timing.
+    if (this._roomElement && this.element.contains(this._roomElement)) {
+      const placeholder = document.querySelector("[data-persistent-room-placeholder]")
+      if (placeholder && !this.element.contains(placeholder)) {
+        this._roomElement.classList.remove("persistent-room-pip")
+        this._resetPosition()
+        placeholder.replaceWith(this._roomElement)
+        this._removeReturnBanner()
+        this.element.hidden = true
+      }
+    }
   }
 
   _addReturnBanner() {
