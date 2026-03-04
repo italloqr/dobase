@@ -63,6 +63,12 @@
   .reorder-mode .todo-list-items { @apply pointer-events-none opacity-50; }
   .reorder-mode .todo-add-item { @apply hidden; }
 
+  /* Drag handle */
+  .todo-drag-handle {
+    @apply flex items-center justify-center w-5 h-5 shrink-0 cursor-grab active:cursor-grabbing
+           text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity;
+  }
+
   /* Completed item */
   .todo-item-completed {
     @apply opacity-50;
@@ -79,5 +85,12 @@
   /* Inline rename input */
   .todo-list-name-input {
     @apply text-base font-semibold text-text-primary px-1.5 py-0.5 rounded-sm border border-accent outline-none bg-surface w-full;
+  }
+}
+
+/* Always show drag handle on touch devices */
+@media (hover: none) {
+  .todo-drag-handle {
+    @apply opacity-100;
   }
 }
