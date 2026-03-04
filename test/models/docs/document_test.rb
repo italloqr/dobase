@@ -15,21 +15,24 @@ module Docs
       assert_includes document.errors[:title], "can't be blank"
     end
 
-    test "last_edited_by is optional" do
+    test "created_by and updated_by are optional" do
       document = docs_documents(:empty_document)
-      assert_nil document.last_edited_by
+      assert_nil document.created_by
+      assert_nil document.updated_by
       assert document.valid?
     end
 
-    test "can be assigned last_edited_by" do
+    test "can be assigned created_by and updated_by" do
       document = docs_documents(:empty_document)
       user = users(:one)
 
-      document.last_edited_by = user
-      document.last_edited_at = Time.current
+      document.created_by = user
+      document.updated_by = user
       document.save!
 
-      assert_equal user, document.reload.last_edited_by
+      document.reload
+      assert_equal user, document.created_by
+      assert_equal user, document.updated_by
     end
 
     test "has rich text content" do

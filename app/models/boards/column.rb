@@ -2,6 +2,7 @@
 
 module Boards
   class Column < ApplicationRecord
+    include Trackable
     self.table_name = "columns"
 
     belongs_to :board, class_name: "Boards::Board"

@@ -16,7 +16,7 @@ module Tools
 
       def update
         previous_assigned_user_id = @card.assigned_user_id
-        if @card.update(card_params)
+        if @card.update(card_params.merge(updated_by: current_user))
           notify_assignment(previous_assigned_user_id)
           respond_to do |format|
             format.html do

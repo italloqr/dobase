@@ -36,7 +36,8 @@ module Tools
       def create
         @document = @tool.documents.build(
           title: "Untitled",
-          last_edited_by: current_user,
+          created_by: current_user,
+          updated_by: current_user,
           last_edited_at: Time.current
         )
 
@@ -49,7 +50,7 @@ module Tools
 
       def update
         @document.assign_attributes(document_params)
-        @document.last_edited_by = current_user
+        @document.updated_by = current_user
         @document.last_edited_at = Time.current
 
         respond_to do |format|

@@ -16,7 +16,7 @@ module Tools
 
       def update
         previous_assigned_user_id = @item.assigned_user_id
-        if @item.update(item_params)
+        if @item.update(item_params.merge(updated_by: current_user))
           notify_assignment(previous_assigned_user_id)
           respond_to do |format|
             format.html do

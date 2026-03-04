@@ -10,7 +10,7 @@ module Columns
 
     def create
       position = @column.cards.maximum(:position).to_i + 1
-      @column.cards.create!(title: params[:title], position: position)
+      @column.cards.create!(title: params[:title], position: position, created_by: current_user, updated_by: current_user)
       redirect_to tool_board_path(@tool)
     end
 

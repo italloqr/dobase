@@ -2,6 +2,7 @@
 
 module Todos
   class Item < ApplicationRecord
+    include Trackable
     self.table_name = "todo_items"
 
     belongs_to :list, class_name: "Todos::List", foreign_key: :todo_list_id

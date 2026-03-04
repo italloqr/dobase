@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_04_124532) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -96,6 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.text "attendees_json"
     t.bigint "calendar_id", null: false
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.text "description"
     t.datetime "ends_at", null: false
     t.string "etag"
@@ -114,10 +115,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.string "timezone"
     t.string "uid"
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
     t.index ["calendar_id", "ends_at"], name: "index_calendar_events_on_calendar_id_and_ends_at"
     t.index ["calendar_id", "starts_at"], name: "index_calendar_events_on_calendar_id_and_starts_at"
     t.index ["calendar_id", "uid"], name: "index_calendar_events_on_calendar_id_and_uid"
     t.index ["calendar_id"], name: "index_calendar_events_on_calendar_id"
+    t.index ["created_by_id"], name: "index_calendar_events_on_created_by_id"
+    t.index ["updated_by_id"], name: "index_calendar_events_on_updated_by_id"
   end
 
   create_table "calendar_invites", force: :cascade do |t|
@@ -160,14 +164,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.string "color"
     t.bigint "column_id", null: false
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.text "description"
     t.date "due_date"
     t.integer "position", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
     t.index ["assigned_user_id"], name: "index_cards_on_assigned_user_id"
     t.index ["column_id", "position"], name: "index_cards_on_column_id_and_position"
     t.index ["column_id"], name: "index_cards_on_column_id"
+    t.index ["created_by_id"], name: "index_cards_on_created_by_id"
+    t.index ["updated_by_id"], name: "index_cards_on_updated_by_id"
   end
 
   create_table "chat_messages", force: :cascade do |t|
@@ -218,11 +226,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.bigint "board_id", null: false
     t.boolean "collapsed", default: false, null: false
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.string "name", null: false
     t.integer "position", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
     t.index ["board_id", "position"], name: "index_columns_on_board_id_and_position"
     t.index ["board_id"], name: "index_columns_on_board_id"
+    t.index ["created_by_id"], name: "index_columns_on_created_by_id"
+    t.index ["updated_by_id"], name: "index_columns_on_updated_by_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -238,45 +250,55 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.text "content_html"
     t.text "content_json"
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.datetime "last_edited_at"
-    t.bigint "last_edited_by_id"
     t.datetime "locked_at"
     t.bigint "locked_by_id"
     t.string "title", default: "Untitled", null: false
     t.bigint "tool_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
     t.integer "word_count", default: 0, null: false
-    t.index ["last_edited_by_id"], name: "index_documents_on_last_edited_by_id"
+    t.index ["created_by_id"], name: "index_documents_on_created_by_id"
     t.index ["locked_by_id"], name: "index_documents_on_locked_by_id"
     t.index ["tool_id", "updated_at"], name: "index_documents_on_tool_id_and_updated_at"
     t.index ["tool_id"], name: "index_documents_on_tool_id"
+    t.index ["updated_by_id"], name: "index_documents_on_updated_by_id"
   end
 
   create_table "file_folders", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.integer "depth", default: 0, null: false
     t.string "name", null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
     t.bigint "tool_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
+    t.index ["created_by_id"], name: "index_file_folders_on_created_by_id"
     t.index ["parent_id"], name: "index_file_folders_on_parent_id"
     t.index ["tool_id", "parent_id", "position"], name: "index_file_folders_on_tool_id_and_parent_id_and_position"
     t.index ["tool_id"], name: "index_file_folders_on_tool_id"
+    t.index ["updated_by_id"], name: "index_file_folders_on_updated_by_id"
   end
 
   create_table "file_items", force: :cascade do |t|
     t.string "content_type"
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.bigint "file_size"
     t.bigint "folder_id"
     t.string "name", null: false
     t.integer "position", default: 0, null: false
     t.bigint "tool_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
+    t.index ["created_by_id"], name: "index_file_items_on_created_by_id"
     t.index ["folder_id"], name: "index_file_items_on_folder_id"
     t.index ["tool_id", "folder_id", "position"], name: "index_file_items_on_tool_id_and_folder_id_and_position"
     t.index ["tool_id"], name: "index_file_items_on_tool_id"
+    t.index ["updated_by_id"], name: "index_file_items_on_updated_by_id"
   end
 
   create_table "file_shares", force: :cascade do |t|
@@ -496,27 +518,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
     t.integer "assigned_user_id"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.text "description"
     t.date "due_date"
     t.integer "position", default: 0, null: false
     t.string "title", null: false
     t.integer "todo_list_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
     t.index ["assigned_user_id"], name: "index_todo_items_on_assigned_user_id"
     t.index ["completed_at"], name: "index_todo_items_on_completed_at"
+    t.index ["created_by_id"], name: "index_todo_items_on_created_by_id"
     t.index ["todo_list_id", "position"], name: "index_todo_items_on_todo_list_id_and_position"
     t.index ["todo_list_id"], name: "index_todo_items_on_todo_list_id"
+    t.index ["updated_by_id"], name: "index_todo_items_on_updated_by_id"
   end
 
   create_table "todo_lists", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.text "description"
     t.integer "position", default: 0, null: false
     t.string "title", null: false
     t.integer "tool_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "updated_by_id"
+    t.index ["created_by_id"], name: "index_todo_lists_on_created_by_id"
     t.index ["tool_id", "position"], name: "index_todo_lists_on_tool_id_and_position"
     t.index ["tool_id"], name: "index_todo_lists_on_tool_id"
+    t.index ["updated_by_id"], name: "index_todo_lists_on_updated_by_id"
   end
 
   create_table "tool_types", force: :cascade do |t|
@@ -564,12 +594,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
   add_foreign_key "calendar_accounts", "tools"
   add_foreign_key "calendar_calendars", "calendar_accounts"
   add_foreign_key "calendar_events", "calendar_calendars", column: "calendar_id"
+  add_foreign_key "calendar_events", "users", column: "created_by_id"
+  add_foreign_key "calendar_events", "users", column: "updated_by_id"
   add_foreign_key "calendar_invites", "calendar_calendars", column: "added_to_calendar_id"
   add_foreign_key "calendar_invites", "calendar_events", column: "created_event_id"
   add_foreign_key "calendar_invites", "mail_messages"
   add_foreign_key "card_attachments", "cards"
   add_foreign_key "cards", "columns"
   add_foreign_key "cards", "users", column: "assigned_user_id"
+  add_foreign_key "cards", "users", column: "created_by_id"
+  add_foreign_key "cards", "users", column: "updated_by_id"
   add_foreign_key "chat_messages", "chat_messages", column: "reply_to_id"
   add_foreign_key "chat_messages", "chats"
   add_foreign_key "chat_messages", "users"
@@ -580,15 +614,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
   add_foreign_key "collaborators", "tools"
   add_foreign_key "collaborators", "users"
   add_foreign_key "columns", "boards"
+  add_foreign_key "columns", "users", column: "created_by_id"
+  add_foreign_key "columns", "users", column: "updated_by_id"
   add_foreign_key "comments", "cards"
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "tools"
-  add_foreign_key "documents", "users", column: "last_edited_by_id"
+  add_foreign_key "documents", "users", column: "created_by_id"
   add_foreign_key "documents", "users", column: "locked_by_id", on_delete: :nullify
+  add_foreign_key "documents", "users", column: "updated_by_id"
   add_foreign_key "file_folders", "file_folders", column: "parent_id"
   add_foreign_key "file_folders", "tools"
+  add_foreign_key "file_folders", "users", column: "created_by_id"
+  add_foreign_key "file_folders", "users", column: "updated_by_id"
   add_foreign_key "file_items", "file_folders", column: "folder_id"
   add_foreign_key "file_items", "tools"
+  add_foreign_key "file_items", "users", column: "created_by_id"
+  add_foreign_key "file_items", "users", column: "updated_by_id"
   add_foreign_key "file_shares", "users", column: "created_by_id"
   add_foreign_key "invitations", "tools"
   add_foreign_key "invitations", "users", column: "invited_by_id"
@@ -609,7 +650,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_153830) do
   add_foreign_key "todo_item_attachments", "todo_items"
   add_foreign_key "todo_items", "todo_lists"
   add_foreign_key "todo_items", "users", column: "assigned_user_id"
+  add_foreign_key "todo_items", "users", column: "created_by_id"
+  add_foreign_key "todo_items", "users", column: "updated_by_id"
   add_foreign_key "todo_lists", "tools"
+  add_foreign_key "todo_lists", "users", column: "created_by_id"
+  add_foreign_key "todo_lists", "users", column: "updated_by_id"
   add_foreign_key "tools", "tool_types"
   add_foreign_key "tools", "users", column: "owner_id"
 end

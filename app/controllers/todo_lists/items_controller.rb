@@ -10,7 +10,7 @@ module TodoLists
 
     def create
       position = @list.items.maximum(:position).to_i + 1
-      @list.items.create!(title: params[:title], position: position)
+      @list.items.create!(title: params[:title], position: position, created_by: current_user, updated_by: current_user)
       redirect_to tool_todo_path(@tool)
     end
 

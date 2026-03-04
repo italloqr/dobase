@@ -3,6 +3,7 @@
 module Files
   class Item < ApplicationRecord
     include HumanFileSize
+    include Trackable
 
     self.table_name = "file_items"
 

@@ -33,6 +33,8 @@ module Tools
         @calendar = find_calendar(event_params[:calendar_id])
         @event = @calendar.events.build(event_params.except(:calendar_id))
         @event.uid = generate_uid
+        @event.created_by = current_user
+        @event.updated_by = current_user
 
         if @event.save
           PushEventJob.perform_later(@event.id, :create)
@@ -50,7 +52,7 @@ module Tools
 
       def update
         @calendars = @calendar_account.calendars.enabled.by_position
-        if @event.update(event_params)
+        if @event.update(event_params.merge(updated_by: current_user))
           PushEventJob.perform_later(@event.id, :update)
           redirect_to tool_calendar_path(@tool), notice: "Event updated successfully.", status: :see_other
         else

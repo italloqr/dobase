@@ -16,14 +16,16 @@ module Tools
         @folder = @tool.file_folders.create!(
           name: params[:name].presence || "New Folder",
           parent: parent,
-          position: position
+          position: position,
+          created_by: current_user,
+          updated_by: current_user
         )
 
         redirect_to tool_files_path(@tool, folder_id: parent&.id)
       end
 
       def update
-        @folder.update!(folder_params)
+        @folder.update!(folder_params.merge(updated_by: current_user))
         render json: { id: @folder.id, name: @folder.name }
       end
 

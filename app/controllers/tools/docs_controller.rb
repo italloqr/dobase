@@ -8,7 +8,7 @@ module Tools
     before_action -> { authorize_tool_access!(@tool) }
 
     def show
-      @documents = @tool.documents.includes(:last_edited_by, :locked_by).ordered
+      @documents = @tool.documents.includes(:updated_by, :locked_by).ordered
       @view_mode = params[:view].presence_in(%w[grid list]) || cookies[:docs_view] || "grid"
 
       if params[:view].present? && params[:view] != cookies[:docs_view]

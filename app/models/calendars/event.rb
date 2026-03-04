@@ -2,6 +2,7 @@
 
 module Calendars
   class Event < ApplicationRecord
+    include Trackable
     self.table_name = "calendar_events"
 
     belongs_to :calendar, class_name: "Calendars::Calendar"

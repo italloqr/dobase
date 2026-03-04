@@ -2,10 +2,10 @@
 
 module Docs
   class Document < ApplicationRecord
+    include Trackable
     self.table_name = "documents"
 
     belongs_to :tool
-    belongs_to :last_edited_by, class_name: "User", optional: true
     belongs_to :locked_by, class_name: "User", optional: true
 
     has_rich_text :content
@@ -42,7 +42,7 @@ module Docs
         type: "content_updated",
         title: title,
         content_html: content.to_s,
-        edited_by: last_edited_by&.name,
+        edited_by: updated_by&.name,
         edited_at: "just now"
       })
     end

@@ -2,6 +2,7 @@
 
 module Files
   class Folder < ApplicationRecord
+    include Trackable
     self.table_name = "file_folders"
 
     MAX_DEPTH = 10

@@ -12,7 +12,7 @@ module Tools
 
       def create
         position = @board.columns.maximum(:position).to_i + 1
-        @column = @board.columns.create!(name: params[:name] || "New Column", position: position)
+        @column = @board.columns.create!(name: params[:name] || "New Column", position: position, created_by: current_user, updated_by: current_user)
         respond_to do |format|
           format.html { redirect_to tool_board_path(@tool) }
           format.json { render json: { id: @column.id, name: @column.name } }
@@ -21,10 +21,10 @@ module Tools
 
       def update
         if params.key?(:collapsed)
-          @column.update!(collapsed: params[:collapsed])
+          @column.update!(collapsed: params[:collapsed], updated_by: current_user)
           head :ok
         else
-          @column.update!(name: params[:name])
+          @column.update!(name: params[:name], updated_by: current_user)
           render json: { id: @column.id, name: @column.name }
         end
       end

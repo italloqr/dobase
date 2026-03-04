@@ -2,6 +2,7 @@
 
 module Todos
   class List < ApplicationRecord
+    include Trackable
     self.table_name = "todo_lists"
 
     belongs_to :tool

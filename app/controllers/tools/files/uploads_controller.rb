@@ -22,7 +22,9 @@ module Tools
           file_item = @tool.file_items.new(
             name: uploaded_file.original_filename,
             folder: folder,
-            position: base_position + index + 1
+            position: base_position + index + 1,
+            created_by: current_user,
+            updated_by: current_user
           )
           file_item.file.attach(uploaded_file)
 

@@ -11,7 +11,7 @@ module Tools
 
       def create
         position = @tool.todo_lists.maximum(:position).to_i + 1
-        @list = @tool.todo_lists.create!(title: params[:title] || "New List", position: position)
+        @list = @tool.todo_lists.create!(title: params[:title] || "New List", position: position, created_by: current_user, updated_by: current_user)
         respond_to do |format|
           format.html { redirect_to tool_todo_path(@tool) }
           format.json { render json: { id: @list.id, title: @list.title } }
@@ -19,7 +19,7 @@ module Tools
       end
 
       def update
-        @list.update!(list_params)
+        @list.update!(list_params.merge(updated_by: current_user))
         render json: { id: @list.id, title: @list.title }
       end
 
