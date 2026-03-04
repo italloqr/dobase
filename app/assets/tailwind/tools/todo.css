@@ -65,8 +65,12 @@
 
   /* Drag handle */
   .todo-drag-handle {
-    @apply flex items-center justify-center w-5 h-5 shrink-0 cursor-grab active:cursor-grabbing
+    @apply flex items-center justify-center w-6 h-6 shrink-0 cursor-grab active:cursor-grabbing
            text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity;
+    touch-action: none;
+  }
+  .todo-drag-handle svg {
+    pointer-events: none;
   }
 
   /* Completed item */

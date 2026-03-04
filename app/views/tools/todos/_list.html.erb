@@ -41,7 +41,7 @@
        id="list-<%= list.id %>-items"
        data-controller="sortable"
        data-sortable-group-value="todo-items"
-       data-sortable-handle-value="[data-drag-handle]"
+       data-sortable-handle-value=".todo-drag-handle"
        data-sortable-url-value="<%= todo_list_positions_path(list) %>"
        data-sortable-param-name-value="item_ids">
     <% pending_items.each do |item| %>
