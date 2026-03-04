@@ -27,15 +27,6 @@
   </head>
 
   <body class="bg-background text-text-primary" data-controller="keyboard-shortcuts">
-    <%# PWA loading screen — shown on cold start, hidden once page is ready %>
-    <div id="splash" data-turbo-permanent style="position:fixed;inset:0;z-index:9999;background:#0071e3;display:flex;align-items:center;justify-content:center;transition:opacity .3s ease">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="80" height="80">
-        <g transform="translate(50 56) scale(12.5)">
-          <path fill-rule="evenodd" d="M6 2H11A18 14 0 0 1 13 30A2 2 0 0 1 11 28V24H6A2 2 0 0 1 4 22V4A2 2 0 0 1 6 2ZM11 8A12 8 0 0 1 11 24Z" fill="#fff"/>
-        </g>
-      </svg>
-    </div>
-    <script>document.addEventListener("DOMContentLoaded",function(){var s=document.getElementById("splash");if(s){s.style.opacity="0";setTimeout(function(){s.style.display="none"},300)}})</script>
     <%= render "shared/flash" %>
     <% if user_signed_in? %>
       <div data-controller="mobile-sidebar">
