@@ -80,7 +80,7 @@
               <div class="dropdown-divider"></div>
               <%= button_to sidebar_group_path(group), method: :delete,
                     class: "dropdown-item flex items-center gap-2 text-error",
-                    data: { turbo_confirm: "Delete this group? Tools will become ungrouped." } do %>
+                    data: { turbo_confirm: "Delete this group? Tools will become ungrouped.", turbo_confirm_button: "Delete" } do %>
                 <%= render "shared/icon", name: "trash-2", size: 14 %>
                 <span>Delete Group</span>
               <% end %>

@@ -59,7 +59,7 @@
         href: tool_calendar_event_path(@tool, @event),
         method: :delete,
         turbo_confirm: "Delete this event?",
-        data: { turbo_frame: "_top" } %>
+        data: { turbo_frame: "_top", turbo_confirm_button: "Delete" } %>
 
     <div class="flex items-center gap-2">
       <%= render "components/button",

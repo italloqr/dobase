@@ -222,7 +222,7 @@
                   <span class="text-xs text-text-tertiary shrink-0"><%= number_to_human_size(attachment.file.byte_size) %></span>
                   <%= link_to tool_todo_item_attachment_path(@tool, @item, attachment),
                       class: "opacity-0 group-hover:opacity-100 p-0.5 rounded hover:text-error text-text-tertiary transition-all",
-                      data: { turbo_method: :delete, turbo_confirm: "Delete this attachment?", turbo_frame: "item-detail-content" } do %>
+                      data: { turbo_method: :delete, turbo_confirm: "Delete this attachment?", turbo_confirm_button: "Delete", turbo_frame: "item-detail-content" } do %>
                     <%= render "shared/icon", name: "x", size: 12 %>
                   <% end %>
                 </div>
@@ -262,6 +262,7 @@
           data: {
             turbo_method: :delete,
             turbo_confirm: "Delete this item? This cannot be undone.",
+            turbo_confirm_button: "Delete",
             turbo_frame: "_top"
           } do %>
         <%= render "shared/icon", name: "trash-2", size: 14 %>

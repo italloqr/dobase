@@ -170,7 +170,7 @@
     <% if @current_folder == "trash" && @trash_count > 0 %>
       <div class="flex items-center justify-between px-3 py-2 bg-warning-light border-b border-warning text-[0.8125rem] text-warning">
         <span>Messages in Trash are deleted forever after 30 days</span>
-        <%= button_to "Empty Trash", tool_empty_trash_path(@tool), method: :delete, class: "text-xs font-medium hover:underline", data: { turbo_confirm: "Permanently delete all messages in Trash?" } %>
+        <%= button_to "Empty Trash", tool_empty_trash_path(@tool), method: :delete, class: "text-xs font-medium hover:underline", data: { turbo_confirm: "Permanently delete all messages in Trash?", turbo_confirm_button: "Empty trash" } %>
       </div>
     <% end %>
 

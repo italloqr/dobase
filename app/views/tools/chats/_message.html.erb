@@ -107,7 +107,8 @@
               group: :right,
               href: tool_chat_message_path(tool, message),
               method: :delete,
-              turbo_confirm: "Delete this message?" %>
+              turbo_confirm: "Delete this message?",
+              data: { turbo_confirm_button: "Delete" } %>
       </div>
     </div>
   </div>

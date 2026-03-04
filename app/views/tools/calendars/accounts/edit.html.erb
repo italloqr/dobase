@@ -53,7 +53,7 @@
                   tool_calendar_account_path(@tool),
                   method: :delete,
                   class: "text-sm text-error hover:underline",
-                  data: { turbo_confirm: "Delete this calendar account? All synced calendars and events will be removed." } %>
+                  data: { turbo_confirm: "Delete this calendar account? All synced calendars and events will be removed.", turbo_confirm_button: "Delete" } %>
             </div>
             <div class="flex items-center gap-3">
               <%= render "components/button", text: "Cancel", href: tool_path(@tool), variant: :secondary %>

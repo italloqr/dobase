@@ -167,7 +167,7 @@
                 size: :sm,
                 href: tool_calendar_invite_path(default_calendar_tool, invite),
                 method: :delete,
-                data: { turbo_confirm: "Decline this invitation?" } %>
+                data: { turbo_confirm: "Decline this invitation?", turbo_confirm_button: "Decline" } %>
           </div>
         <% end %>
       </div>
@@ -182,7 +182,7 @@
             size: :sm,
             href: tool_calendar_invite_path(tool, invite),
             method: :delete,
-            data: { turbo_confirm: "Decline this invitation?" } %>
+            data: { turbo_confirm: "Decline this invitation?", turbo_confirm_button: "Decline" } %>
       </div>
     <% end %>
   <% elsif invite.accepted? && invite.created_event.present? && invite.added_to_calendar.present? %>

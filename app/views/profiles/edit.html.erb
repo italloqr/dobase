@@ -28,7 +28,7 @@
               href: profile_path,
               method: :delete,
               turbo_confirm: "Are you sure you want to delete your account? All your data will be permanently removed. This cannot be undone.",
-              data: { turbo_frame: "_top" } %>
+              data: { turbo_frame: "_top", turbo_confirm_button: "Delete account" } %>
       </div>
     </div>
 
@@ -99,7 +99,7 @@
                 href: profile_path,
                 method: :delete,
                 turbo_confirm: "Are you sure you want to delete your account? All your data will be permanently removed. This cannot be undone.",
-                data: { turbo_frame: "_top" } %>
+                data: { turbo_frame: "_top", turbo_confirm_button: "Delete account" } %>
         </div>
       </div>
 
@@ -207,7 +207,7 @@
                   variant: :danger,
                   href: user_session_path(s),
                   method: :delete,
-                  data: { turbo_frame: "profile-form", turbo_confirm: "Revoke this session? The device will be signed out." } %>
+                  data: { turbo_frame: "profile-form", turbo_confirm: "Revoke this session? The device will be signed out.", turbo_confirm_button: "Revoke" } %>
               <% end %>
             </div>
           <% end %>

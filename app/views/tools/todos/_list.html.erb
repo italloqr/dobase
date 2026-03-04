@@ -27,7 +27,8 @@
           method: :delete,
           turbo_confirm: pending_count > 0 ?
             "Delete this list and its #{pending_count} item#{'s' unless pending_count == 1}?" :
-            "Delete this list?" %>
+            "Delete this list?",
+          data: { turbo_confirm_button: "Delete" } %>
     <% end %>
   </div>
 

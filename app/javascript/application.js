@@ -16,6 +16,25 @@ document.addEventListener("turbo:before-morph-element", (event) => {
   }
 })
 
+// Custom confirmation dialog (replaces browser confirm())
+Turbo.config.forms.confirm = (message, element, submitter) => {
+  const dialog = document.getElementById("turbo-confirm-dialog")
+  if (!dialog) return Promise.resolve(confirm(message))
+
+  dialog.querySelector("#turbo-confirm-message").textContent = message
+
+  const confirmBtn = dialog.querySelector("button[value='confirm']")
+  confirmBtn.textContent = submitter?.dataset.turboConfirmButton || element?.dataset.turboConfirmButton || "Confirm"
+
+  dialog.showModal()
+
+  return new Promise((resolve) => {
+    dialog.addEventListener("close", () => {
+      resolve(dialog.returnValue === "confirm")
+    }, { once: true })
+  })
+}
+
 // Register service worker for PWA support
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js", { scope: "/" })

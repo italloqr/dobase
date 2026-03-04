@@ -49,6 +49,7 @@
   </head>
 
   <body class="bg-background text-text-primary" data-controller="keyboard-shortcuts">
+    <%= render "shared/turbo_confirm_dialog" %>
     <%= render "shared/flash" %>
     <% if user_signed_in? %>
       <div data-controller="mobile-sidebar">

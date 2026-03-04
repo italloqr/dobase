@@ -43,7 +43,8 @@
             variant: :ghost,
             href: tool_docs_document_path(@tool, @document),
             method: :delete,
-            turbo_confirm: "Are you sure? This document will be permanently deleted." %>
+            turbo_confirm: "Are you sure? This document will be permanently deleted.",
+            data: { turbo_confirm_button: "Delete" } %>
     </div>
   <% end %>
 

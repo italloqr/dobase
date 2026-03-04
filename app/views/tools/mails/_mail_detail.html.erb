@@ -72,7 +72,7 @@
       <%= render "components/icon_button", icon: "trash-2", title: "Delete forever",
           href: tool_mail_path(@tool, @selected_message), method: :delete,
           variant: :danger, turbo_confirm: "Permanently delete this email?",
-          data: { controller: "hotkey", hotkey: "#" } %>
+          data: { controller: "hotkey", hotkey: "#", turbo_confirm_button: "Delete forever" } %>
     <% else %>
       <%= render "components/icon_button", icon: "trash-2", title: "Delete (#)",
           href: tool_mail_trash_path(@tool, @selected_message), method: :post,

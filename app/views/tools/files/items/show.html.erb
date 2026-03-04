@@ -29,7 +29,7 @@
         <%= render "shared/icon", name: "download", size: 16 %>
         <span>Download</span>
       <% end %>
-      <%= button_to tool_files_item_path(@tool, @file), method: :delete, class: "icon-btn icon-btn-sm", title: "Delete", data: { turbo_confirm: "Delete this file?" } do %>
+      <%= button_to tool_files_item_path(@tool, @file), method: :delete, class: "icon-btn icon-btn-sm", title: "Delete", data: { turbo_confirm: "Delete this file?", turbo_confirm_button: "Delete" } do %>
         <%= render "shared/icon", name: "trash-2", size: 16 %>
       <% end %>
     </div>
