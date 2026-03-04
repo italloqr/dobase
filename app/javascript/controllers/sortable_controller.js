@@ -29,8 +29,6 @@ export default class extends Controller {
     if (this.hasGroupValue) opts.group = this.groupValue
     if (this.hasHandleValue) {
       opts.handle = this.handleValue
-      opts.filter = "[data-controller='sortable']"
-      opts.preventOnFilter = false
     }
 
     this.sortable = new Sortable(this.element, opts)
