@@ -4,6 +4,7 @@ module Tools
   module Mails
     class TrashesController < ApplicationController
       include ToolAuthorization
+      include NextMailNavigation
 
       before_action :set_tool
       before_action -> { authorize_tool_access!(@tool) }
@@ -11,14 +12,17 @@ module Tools
 
       # POST /tools/:tool_id/mails/:mail_id/trash
       def create
+        folder = params[:folder] || "inbox"
+        next_msg = find_next_message(@message, folder)
         @message.update!(trashed: true, archived: false)
-        redirect_back fallback_location: tool_mails_path(@tool), notice: "Email moved to trash."
+        redirect_to_next_mail_or_fallback(next_msg, folder: folder, notice: "Email moved to trash.")
       end
 
       # DELETE /tools/:tool_id/mails/:mail_id/trash
       def destroy
+        next_msg = find_next_message(@message, "trash")
         @message.update!(trashed: false)
-        redirect_back fallback_location: tool_mails_path(@tool, folder: "trash"), notice: "Email restored."
+        redirect_to_next_mail_or_fallback(next_msg, folder: "trash", notice: "Email restored.")
       end
 
       # DELETE /tools/:tool_id/mails/trash (empty trash)

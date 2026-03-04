@@ -25,11 +25,12 @@
     <span class="w-px h-4 bg-border-light mx-1"></span>
     <% if @current_folder == "trash" %>
       <%= render "components/icon_button", icon: "rotate-ccw", title: "Restore",
-          href: tool_mail_trash_path(@tool, @selected_message), method: :delete %>
+          href: tool_mail_trash_path(@tool, @selected_message), method: :delete,
+          data: { turbo_frame: "_top" } %>
     <% else %>
       <%= render "components/icon_button", icon: "archive", title: "Archive (e)",
-          href: tool_mail_archive_path(@tool, @selected_message), method: :post,
-          data: { controller: "hotkey", hotkey: "e" } %>
+          href: tool_mail_archive_path(@tool, @selected_message, folder: @current_folder), method: :post,
+          data: { controller: "hotkey", hotkey: "e", turbo_frame: "_top" } %>
     <% end %>
     <div class="relative">
       <button type="button"
@@ -48,7 +49,8 @@
         <% move_folders.each do |folder_name, icon, label| %>
           <%= button_to tool_mail_move_path(@tool, @selected_message),
                 class: "dropdown-item flex items-center gap-2",
-                params: { folder: folder_name } do %>
+                params: { folder: folder_name, current_folder: @current_folder },
+                data: { turbo_frame: "_top" } do %>
             <%= render "shared/icon", name: icon, size: 16 %>
             <span><%= label %></span>
           <% end %>
@@ -70,13 +72,13 @@
         data: { controller: "hotkey", hotkey: "u" } %>
     <% if @current_folder == "trash" %>
       <%= render "components/icon_button", icon: "trash-2", title: "Delete forever",
-          href: tool_mail_path(@tool, @selected_message), method: :delete,
+          href: tool_mail_path(@tool, @selected_message, folder: @current_folder), method: :delete,
           variant: :danger, turbo_confirm: "Permanently delete this email?",
-          data: { controller: "hotkey", hotkey: "#", turbo_confirm_button: "Delete forever" } %>
+          data: { controller: "hotkey", hotkey: "#", turbo_confirm_button: "Delete forever", turbo_frame: "_top" } %>
     <% else %>
       <%= render "components/icon_button", icon: "trash-2", title: "Delete (#)",
-          href: tool_mail_trash_path(@tool, @selected_message), method: :post,
-          data: { controller: "hotkey", hotkey: "#" } %>
+          href: tool_mail_trash_path(@tool, @selected_message, folder: @current_folder), method: :post,
+          data: { controller: "hotkey", hotkey: "#", turbo_frame: "_top" } %>
     <% end %>
   </div>
 </div>

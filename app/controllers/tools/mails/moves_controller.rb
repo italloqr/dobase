@@ -5,6 +5,7 @@ module Tools
     class MovesController < ApplicationController
       include ToolAuthorization
       include FolderValidation
+      include NextMailNavigation
 
       before_action :set_tool
       before_action -> { authorize_tool_access!(@tool) }
@@ -20,13 +21,16 @@ module Tools
         end
 
         source_folder = @message.folder || "INBOX"
+        current_folder = params[:current_folder] || "inbox"
+        next_msg = find_next_message(@message, current_folder)
+
         @message.update!(folder: target_folder, archived: false, trashed: false)
 
         if @message.uid.present?
           ImapSyncJob.perform_later(@tool.mail_account.id, "move_to_folder", @message.uid, source_folder, target_folder)
         end
 
-        redirect_back fallback_location: tool_mails_path(@tool, folder: target_folder), notice: "Moved to #{target_folder}."
+        redirect_to_next_mail_or_fallback(next_msg, folder: current_folder, notice: "Moved to #{target_folder}.")
       end
 
       private
