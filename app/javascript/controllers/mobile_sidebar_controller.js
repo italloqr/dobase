@@ -17,7 +17,7 @@ export default class extends Controller {
 
   // Close sidebar when clicking a link (for navigation)
   navigate() {
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 1024) {
       this.close()
     }
   }

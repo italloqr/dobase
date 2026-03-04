@@ -6,19 +6,19 @@
   }
 
   .btn-primary {
-    @apply bg-accent text-text-inverse hover:bg-accent-hover focus-visible:ring-accent;
+    @apply bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-hover focus-visible:ring-accent;
   }
 
   .btn-secondary {
-    @apply bg-background-secondary text-text-primary border border-border hover:bg-background-tertiary focus-visible:ring-accent;
+    @apply bg-background-secondary text-text-primary border border-border hover:bg-background-tertiary active:bg-background-tertiary focus-visible:ring-accent;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-text-secondary hover:bg-background-secondary hover:text-text-primary focus-visible:ring-accent;
+    @apply bg-transparent text-text-secondary hover:bg-background-secondary hover:text-text-primary active:bg-background-secondary active:text-text-primary focus-visible:ring-accent;
   }
 
   .btn-danger {
-    @apply bg-error text-text-inverse hover:opacity-90 focus-visible:ring-error;
+    @apply bg-error text-text-inverse hover:opacity-90 active:opacity-90 focus-visible:ring-error;
   }
 
   .btn-sm {
@@ -31,7 +31,7 @@
 
   /* Icon Button - for toolbar actions */
   .icon-btn {
-    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors;
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary active:bg-background-tertiary active:text-text-primary transition-colors;
   }
 
   .icon-btn-sm {
