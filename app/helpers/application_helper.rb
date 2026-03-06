@@ -44,6 +44,12 @@ module ApplicationHelper
     end
   end
 
+  # Adds target="_blank" and rel="noopener" to all links in HTML content.
+  def externalize_links(html)
+    return html if html.blank?
+    html.to_s.gsub(/<a\s/, '<a target="_blank" rel="noopener" ').html_safe
+  end
+
   # Returns attribution text like "Created by Alice · Edited by Bob"
   # Only includes names that differ from current_user.
   def attribution_text(record)
