@@ -33,6 +33,8 @@ module Tools
           end
         end
 
+        notify_uploads if errors.empty?
+
         respond_to do |format|
           if errors.empty?
             format.html { redirect_to tool_files_path(@tool, folder_id: folder&.id) }
@@ -48,6 +50,14 @@ module Tools
 
       def set_tool
         @tool = Tool.find(params[:tool_id])
+      end
+
+      def notify_uploads
+        recipients = @tool.users.where.not(id: current_user.id)
+        return if recipients.none?
+
+        FileUploadedNotifier.with(file: @tool.file_items.last, uploader: current_user, tool: @tool).deliver(recipients)
+        recipients.each(&:prune_notifications!)
       end
     end
   end

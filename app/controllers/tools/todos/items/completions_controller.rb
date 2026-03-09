@@ -13,6 +13,7 @@ module Tools
         # POST /tools/:tool_id/todo/items/:item_id/completion
         def create
           @item.update!(completed_at: Time.current)
+          notify_completion
           respond_to do |format|
             format.html { redirect_to tool_todo_path(@tool) }
             format.json { render json: { success: true, completed_at: @item.completed_at } }
@@ -36,6 +37,15 @@ module Tools
 
         def set_item
           @item = ::Todos::Item.joins(:list).where(todo_lists: { tool_id: @tool.id }).find(params[:item_id])
+        end
+
+        def notify_completion
+          return unless @item.assigned_user_id.present?
+          return if @item.assigned_user_id == current_user.id
+
+          assignee = User.find(@item.assigned_user_id)
+          TodoCompletedNotifier.with(item: @item, completer: current_user, tool: @tool).deliver(assignee)
+          assignee.prune_notifications!
         end
       end
     end

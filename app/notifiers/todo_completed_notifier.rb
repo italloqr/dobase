@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class TodoAssignmentNotifier < Noticed::Event
-  required_params :item, :assigner, :tool
+class TodoCompletedNotifier < Noticed::Event
+  required_params :item, :completer, :tool
 
   deliver_by :custom_action_cable,
     class: "Noticed::DeliveryMethods::CustomActionCable",
@@ -10,9 +10,9 @@ class TodoAssignmentNotifier < Noticed::Event
 
   notification_methods do
     def message
-      assigner = event.params[:assigner]
+      completer = event.params[:completer]
       item = event.params[:item]
-      "#{assigner&.name || 'Someone'} assigned you to #{item&.title || 'a todo'}"
+      "#{completer&.name || 'Someone'} completed #{item&.title || 'a todo'}"
     end
 
     def url
@@ -22,13 +22,13 @@ class TodoAssignmentNotifier < Noticed::Event
     end
 
     def icon_name
-      "check-square"
+      "check-circle"
     end
 
     def notification_data
       {
         id: id,
-        type: "TodoAssignmentNotifier",
+        type: "TodoCompletedNotifier",
         message: message,
         url: url,
         icon: icon_name,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class TodoAssignmentNotifier < Noticed::Event
-  required_params :item, :assigner, :tool
+class CardMovedNotifier < Noticed::Event
+  required_params :card, :mover, :tool, :column
 
   deliver_by :custom_action_cable,
     class: "Noticed::DeliveryMethods::CustomActionCable",
@@ -10,25 +10,26 @@ class TodoAssignmentNotifier < Noticed::Event
 
   notification_methods do
     def message
-      assigner = event.params[:assigner]
-      item = event.params[:item]
-      "#{assigner&.name || 'Someone'} assigned you to #{item&.title || 'a todo'}"
+      mover = event.params[:mover]
+      card = event.params[:card]
+      column = event.params[:column]
+      "#{mover&.name || 'Someone'} moved #{card&.title || 'a card'} to #{column&.name || 'a column'}"
     end
 
     def url
       tool = event.params[:tool]
-      item = event.params[:item]
-      tool ? tool_todo_path(tool, item: item&.id) : root_path
+      card = event.params[:card]
+      tool ? tool_board_path(tool, card: card&.id) : root_path
     end
 
     def icon_name
-      "check-square"
+      "arrow-right"
     end
 
     def notification_data
       {
         id: id,
-        type: "TodoAssignmentNotifier",
+        type: "CardMovedNotifier",
         message: message,
         url: url,
         icon: icon_name,

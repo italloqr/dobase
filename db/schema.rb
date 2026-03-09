@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_04_124532) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_131344) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -578,7 +578,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_124532) do
     t.string "email_address", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
+    t.datetime "last_notification_digest_at"
     t.string "last_visited_path"
+    t.string "notification_digest", default: "off", null: false
     t.text "otp_recovery_codes"
     t.boolean "otp_required", default: false, null: false
     t.string "otp_secret"

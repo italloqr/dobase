@@ -27,7 +27,7 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    permitted = params.require(:user).permit(:first_name, :last_name, :email_address, :avatar, :timezone, :password, :password_confirmation)
+    permitted = params.require(:user).permit(:first_name, :last_name, :email_address, :avatar, :timezone, :notification_digest, :password, :password_confirmation)
     if permitted[:password].blank?
       permitted.delete(:password)
       permitted.delete(:password_confirmation)

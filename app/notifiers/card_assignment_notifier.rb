@@ -8,10 +8,6 @@ class CardAssignmentNotifier < Noticed::Event
     stream: -> { "notifications:#{recipient.id}" },
     message: -> { notification_data }
 
-  deliver_by :email,
-    mailer: "NotificationMailer",
-    method: :card_assigned
-
   notification_methods do
     def message
       assigner = event.params[:assigner]

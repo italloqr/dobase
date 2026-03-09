@@ -6,6 +6,10 @@
         <%= render "shared/icon", name: "user", size: 16 %>
         <span>Profile</span>
       </button>
+      <button type="button" class="tab w-full justify-start" data-tabs-target="tab" data-tab="notifications" data-action="click->tabs#select">
+        <%= render "shared/icon", name: "bell", size: 16 %>
+        <span>Notifications</span>
+      </button>
       <button type="button" class="tab w-full justify-start" data-tabs-target="tab" data-tab="security" data-action="click->tabs#select">
         <%= render "shared/icon", name: "shield", size: 16 %>
         <span>Security</span>
@@ -94,6 +98,32 @@
           </div>
         <% end %>
 
+      </div>
+
+      <%# Notifications panel %>
+      <div data-tabs-target="panel" data-tab="notifications" class="hidden">
+        <h3 class="text-sm font-semibold text-text-primary mb-1">Email digest</h3>
+        <p class="text-xs text-text-tertiary mb-4">Unread notifications are combined into a single email. If you've already seen them in the app, no email is sent.</p>
+
+        <%= form_with model: @user, url: profile_path, method: :patch, data: { turbo_frame: "_top" } do |f| %>
+          <div class="form-field mb-4">
+            <label for="user_notification_digest" class="label">Frequency</label>
+            <%= f.select :notification_digest,
+              options_for_select([
+                ["Off", "off"],
+                ["Every hour", "1_hour"],
+                ["Every 2 hours", "2_hours"],
+                ["Every 4 hours", "4_hours"],
+                ["Once a day", "daily"]
+              ], @user.notification_digest),
+              {},
+              class: "input" %>
+          </div>
+
+          <div class="flex justify-end">
+            <%= render "components/button", text: "Save" %>
+          </div>
+        <% end %>
       </div>
 
       <%# Security panel %>

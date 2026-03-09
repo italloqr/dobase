@@ -42,6 +42,7 @@ module Tools
         )
 
         if @document.save
+          notify_document_created
           redirect_to edit_tool_docs_document_path(@tool, @document)
         else
           redirect_to tool_docs_path(@tool), alert: "Could not create document."
@@ -82,6 +83,14 @@ module Tools
 
       def document_params
         params.require(:docs_document).permit(:title, :content)
+      end
+
+      def notify_document_created
+        recipients = @tool.users.where.not(id: current_user.id)
+        return if recipients.none?
+
+        DocumentCreatedNotifier.with(document: @document, creator: current_user, tool: @tool).deliver(recipients)
+        recipients.each(&:prune_notifications!)
       end
     end
   end

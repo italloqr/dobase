@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :notifications, as: :recipient, dependent: :destroy, class_name: "Noticed::Notification"
 
   NOTIFICATION_LIMIT = 100
+  NOTIFICATION_DIGEST_OPTIONS = %w[off 1_hour 2_hours 4_hours daily].freeze
 
   has_one_attached :avatar
 
@@ -20,6 +21,7 @@ class User < ApplicationRecord
   def name = "#{first_name} #{last_name}".strip
   validates :password, length: { minimum: 8 }, allow_nil: true
   validates :timezone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }, allow_nil: true
+  validates :notification_digest, inclusion: { in: NOTIFICATION_DIGEST_OPTIONS }
   validate :acceptable_avatar
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
@@ -30,6 +32,15 @@ class User < ApplicationRecord
     return unless cutoff_id
 
     notifications.where("id <= ?", cutoff_id).delete_all
+  end
+
+  def digest_interval
+    case notification_digest
+    when "1_hour"  then 1.hour
+    when "2_hours" then 2.hours
+    when "4_hours" then 4.hours
+    when "daily"   then 1.day
+    end
   end
 
   def accessible_tools

@@ -38,6 +38,7 @@ module Tools
 
         if @event.save
           PushEventJob.perform_later(@event.id, :create)
+          notify_event_created
           redirect_to tool_calendar_path(@tool), notice: "Event created successfully.", status: :see_other
         else
           render :new, status: :unprocessable_entity
@@ -146,6 +147,14 @@ module Tools
 
       def generate_uid
         "#{SecureRandom.uuid}@#{Rails.application.config.x.app.name.parameterize}"
+      end
+
+      def notify_event_created
+        recipients = @tool.users.where.not(id: current_user.id)
+        return if recipients.none?
+
+        CalendarEventCreatedNotifier.with(event: @event, creator: current_user, tool: @tool).deliver(recipients)
+        recipients.each(&:prune_notifications!)
       end
     end
   end

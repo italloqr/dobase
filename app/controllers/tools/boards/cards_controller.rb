@@ -76,6 +76,16 @@ module Tools
         CardAssignmentNotifier.with(card: @card, assigner: current_user, tool: @tool).deliver(assignee)
         assignee.prune_notifications!
       end
+
+      def notify_card_moved
+        return unless @card.column_id_previously_changed?
+        return unless @card.assigned_user_id.present?
+        return if @card.assigned_user_id == current_user.id
+
+        assignee = User.find(@card.assigned_user_id)
+        CardMovedNotifier.with(card: @card, mover: current_user, tool: @tool, column: @card.column).deliver(assignee)
+        assignee.prune_notifications!
+      end
     end
   end
 end

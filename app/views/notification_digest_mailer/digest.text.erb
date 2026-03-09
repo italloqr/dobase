@@ -1,0 +1,10 @@
+You have <%= @notifications.size %> new <%= "notification".pluralize(@notifications.size) %>
+<%= "=" * 40 %>
+
+<% @notifications.each do |notification| %>
+- <%= notification.message %>
+  <%= notification.url %>
+
+<% end %>
+---
+You can change how often you receive these emails in your profile settings.

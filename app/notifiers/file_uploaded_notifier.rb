@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class TodoAssignmentNotifier < Noticed::Event
-  required_params :item, :assigner, :tool
+class FileUploadedNotifier < Noticed::Event
+  required_params :file, :uploader, :tool
 
   deliver_by :custom_action_cable,
     class: "Noticed::DeliveryMethods::CustomActionCable",
@@ -10,25 +10,24 @@ class TodoAssignmentNotifier < Noticed::Event
 
   notification_methods do
     def message
-      assigner = event.params[:assigner]
-      item = event.params[:item]
-      "#{assigner&.name || 'Someone'} assigned you to #{item&.title || 'a todo'}"
+      uploader = event.params[:uploader]
+      file = event.params[:file]
+      "#{uploader&.name || 'Someone'} uploaded #{file&.name || 'a file'}"
     end
 
     def url
       tool = event.params[:tool]
-      item = event.params[:item]
-      tool ? tool_todo_path(tool, item: item&.id) : root_path
+      tool ? tool_files_path(tool) : root_path
     end
 
     def icon_name
-      "check-square"
+      "upload"
     end
 
     def notification_data
       {
         id: id,
-        type: "TodoAssignmentNotifier",
+        type: "FileUploadedNotifier",
         message: message,
         url: url,
         icon: icon_name,
