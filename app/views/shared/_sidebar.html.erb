@@ -2,19 +2,23 @@
        data-action="sortable:move->sidebar#handleToolMove"
        data-mobile-sidebar-target="sidebar">
   <%# ── Logo ── %>
-  <div class="px-3 py-2.5 border-b border-border-light flex items-center gap-1">
-    <%= link_to root_path, class: "flex items-center gap-2 flex-1 min-w-0", data: { action: "click->mobile-sidebar#navigate" } do %>
+  <div class="px-2 py-2 border-b border-border-light flex items-center gap-1">
+    <button type="button"
+            class="sidebar-logo-btn sidebar-reorder-hide"
+            popovertarget="sidebar-add-menu"
+            style="anchor-name: --sidebar-add-btn">
       <img src="<%= app_logo_path %>" alt="<%= app_name %>" class="w-7 h-7 flex-shrink-0">
       <span class="font-semibold text-base text-text-primary truncate"><%= app_name %></span>
-    <% end %>
+      <%= render "shared/icon", name: "settings", size: 14, class: "text-text-tertiary flex-shrink-0 ml-auto" %>
+    </button>
 
-    <%# Add menu — lives here so the bottom bar stays uncluttered %>
     <button type="button"
-            class="sidebar-add-btn flex-shrink-0"
-            popovertarget="sidebar-add-menu"
-            style="anchor-name: --sidebar-add-btn"
-            title="Add tool or group">
-      <%= render "shared/icon", name: "plus", size: 16 %>
+            class="sidebar-logo-btn sidebar-reorder-show"
+            data-action="click->sidebar#toggleReorder"
+            title="Done reordering">
+      <img src="<%= app_logo_path %>" alt="<%= app_name %>" class="w-7 h-7 flex-shrink-0">
+      <span class="font-semibold text-base text-text-primary truncate"><%= app_name %></span>
+      <%= render "shared/icon", name: "check", size: 14, class: "text-accent flex-shrink-0 ml-auto" %>
     </button>
 
     <button type="button" class="sidebar-close-btn flex-shrink-0" data-action="click->mobile-sidebar#close">
@@ -23,7 +27,7 @@
   </div>
 
   <%# ── Navigation ── %>
-  <nav class="flex-1 py-2 overflow-y-auto scrollbar-thin">
+  <nav class="flex-1 py-2 overflow-y-auto scrollbar-thin" data-sidebar-target="nav">
     <% if defined?(current_user) && current_user %>
       <%# ── Ungrouped Tools ── %>
       <% ungrouped = current_user.ungrouped_tools %>
@@ -32,6 +36,7 @@
              data-sortable-group-value="sidebar-tools"
              data-sortable-url-value="<%= sidebar_positions_path %>"
              data-sortable-param-name-value="tool_ids"
+             data-sortable-enabled-value="false"
              data-group-id="ungrouped">
           <% ungrouped.each do |instance| %>
             <%= render "shared/sidebar_tool_item", instance: instance %>
@@ -43,7 +48,8 @@
       <div data-controller="sortable"
            data-sortable-handle-value=".sidebar-group-header"
            data-sortable-url-value="<%= sidebar_positions_path %>"
-           data-sortable-param-name-value="group_ids">
+           data-sortable-param-name-value="group_ids"
+           data-sortable-enabled-value="false">
         <% current_user.sidebar_groups.ordered.includes(memberships: { tool: [:tool_type, :mail_account] }).each do |group| %>
           <div class="sidebar-group mt-2" data-sort-id="<%= group.id %>">
             <%# Group header %>
@@ -93,7 +99,8 @@
                  data-controller="sortable"
                  data-sortable-group-value="sidebar-tools"
                  data-sortable-url-value="<%= sidebar_group_positions_path(group) %>"
-                 data-sortable-param-name-value="tool_ids">
+                 data-sortable-param-name-value="tool_ids"
+                 data-sortable-enabled-value="false">
               <% group.memberships.each do |membership| %>
                 <% instance = membership.tool %>
                 <% next unless instance&.accessible_by?(current_user) %>
@@ -163,6 +170,13 @@
         <%= render "shared/icon", name: "folder-plus", size: 16 %>
         <span>New Group</span>
       <% end %>
+      <div class="dropdown-divider"></div>
+      <button type="button" class="dropdown-item flex items-center gap-2"
+              data-action="click->sidebar#toggleReorder"
+              popovertarget="sidebar-add-menu" popovertargetaction="hide">
+        <%= render "shared/icon", name: "grip-vertical", size: 16 %>
+        <span>Reorder</span>
+      </button>
     </div>
 
     <div id="sidebar-user-menu" popover="auto" class="popover-menu sidebar-user-popover">

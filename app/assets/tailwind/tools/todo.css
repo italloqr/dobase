@@ -53,13 +53,7 @@
     animation: check-pop 0.3s ease-out forwards;
   }
 
-  /* Reorder mode */
-  .reorder-mode > [data-sort-id] {
-    @apply cursor-grab outline-2 outline-accent outline -outline-offset-2;
-    animation: wiggle 0.25s ease-in-out infinite;
-  }
-  .reorder-mode > [data-sort-id]:nth-child(even) { animation-delay: 0.125s; }
-  .reorder-mode > [data-sort-id]:active { @apply cursor-grabbing; animation: none; }
+  /* Reorder mode - todo-specific overrides (base in components.css) */
   .reorder-mode .todo-list-items { @apply pointer-events-none opacity-50; }
   .reorder-mode .todo-add-item { @apply hidden; }
 

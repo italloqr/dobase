@@ -27,7 +27,7 @@
     <%= render "components/button", text: "Add List", icon: "plus", size: :sm, variant: :secondary, type: :button, commandfor: "add-list-modal", command: "show-modal", data: { controller: "hotkey", hotkey: "n" } %>
   <% end %>
 
-  <div class="flex-1 overflow-y-auto p-4 pt-6">
+  <div class="tool-scroll-area flex-1 overflow-y-auto p-4 pt-6">
     <% if @lists.empty? %>
       <div class="flex items-center justify-center h-full">
         <%= render "components/empty_state",

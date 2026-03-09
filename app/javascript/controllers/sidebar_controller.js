@@ -2,7 +2,20 @@ import { Controller } from "@hotwired/stimulus"
 import { api, apiPatch, apiPost, apiDelete } from "services/api"
 
 export default class extends Controller {
-  static targets = ["groupContent", "editToolFrame", "editToolDialog"]
+  static targets = ["groupContent", "editToolFrame", "editToolDialog", "nav"]
+
+  connect() {
+    this._preventReorderNav = (e) => {
+      if (!this.element.classList.contains("reorder-mode")) return
+      const link = e.target.closest("a")
+      if (link) e.preventDefault()
+    }
+    this.navTarget.addEventListener("click", this._preventReorderNav)
+  }
+
+  disconnect() {
+    this.navTarget.removeEventListener("click", this._preventReorderNav)
+  }
 
   // ── Collapse/Expand ──
 
@@ -76,6 +89,20 @@ export default class extends Controller {
     const dialog = document.getElementById("edit-tool-modal")
     if (frame) frame.src = `/tools/${toolId}/edit`
     if (dialog) dialog.showModal()
+  }
+
+  // ── Reorder Mode ──
+
+  toggleReorder() {
+    const active = this.element.classList.toggle("reorder-mode")
+
+    // Toggle reorder-mode on each sortable container (shared > [data-sort-id] rule)
+    // and enable/disable their sortable controllers
+    this.navTarget.querySelectorAll("[data-controller~='sortable']").forEach(el => {
+      el.classList.toggle("reorder-mode", active)
+      const ctrl = this.application.getControllerForElementAndIdentifier(el, "sortable")
+      if (ctrl) ctrl.enabledValue = active
+    })
   }
 
   // ── Cross-container Tool Move ──

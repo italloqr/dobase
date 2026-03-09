@@ -369,4 +369,17 @@
   .command-palette-item.hidden {
     @apply hidden;
   }
+
+  /* ── Reorder Mode (shared across board, todo, sidebar) ── */
+  .reorder-mode > [data-sort-id] {
+    @apply cursor-grab outline-2 outline-accent outline -outline-offset-2;
+    animation: wiggle 0.25s ease-in-out infinite;
+  }
+  .reorder-mode > [data-sort-id]:nth-child(even) { animation-delay: 0.125s; }
+  .reorder-mode > [data-sort-id]:active { @apply cursor-grabbing; animation: none; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-0.4deg); }
+  50% { transform: rotate(0.4deg); }
 }

@@ -1,19 +1,7 @@
 /* Board tool - only what can't be done in ERB with Tailwind */
 
-/* Reorder mode animation */
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-0.4deg); }
-  50% { transform: rotate(0.4deg); }
-}
-
 @layer components {
-  /* Reorder mode - complex state selectors */
-  .reorder-mode .board-column {
-    @apply cursor-grab outline-2 outline-accent outline -outline-offset-2;
-    animation: wiggle 0.25s ease-in-out infinite;
-  }
-  .reorder-mode .board-column:nth-child(even) { animation-delay: 0.125s; }
-  .reorder-mode .board-column:active { @apply cursor-grabbing; animation: none; }
+  /* Reorder mode - board-specific overrides (base in components.css) */
   .reorder-mode .board-column-cards { @apply pointer-events-none opacity-50; }
   .reorder-mode .board-add-card { @apply hidden; }
 

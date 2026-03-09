@@ -102,6 +102,16 @@
     position-try-fallbacks: flip-inline, flip-block;
   }
 
+  /* Sidebar logo button — clickable logo bar that opens actions menu */
+  .sidebar-logo-btn {
+    @apply flex items-center gap-2 flex-1 min-w-0 px-3 py-1 rounded-lg
+           hover:bg-sidebar-hover active:bg-sidebar-active transition-colors cursor-pointer;
+  }
+
+  /* Done button hidden by default, shown during reorder mode */
+  .sidebar-reorder-show { @apply hidden; }
+  .sidebar.reorder-mode .sidebar-reorder-show { @apply flex; }
+
   /* Sidebar icon button — used in logo bar and bottom bar */
   .sidebar-add-btn {
     @apply flex items-center justify-center w-8 h-8 rounded-lg
@@ -173,6 +183,10 @@
            text-text-secondary hover:text-text-primary hover:bg-sidebar-hover transition-colors;
   }
 
+  /* ── Sidebar Reorder Mode (base in components.css) ── */
+  .reorder-mode .sidebar-tool-menu-btn { @apply hidden; }
+  .sidebar.reorder-mode .sidebar-reorder-hide { @apply hidden; }
+
   /* ── Mobile Bottom Bar ── */
   .mobile-bottom-bar {
     @apply fixed left-0 right-0 z-50 hidden items-center justify-between;
@@ -209,6 +223,10 @@
 
 /* Responsive: Mobile */
 @media (max-width: 1023px) {
+  :root {
+    --mobile-bar-clearance: calc(var(--mobile-bottom-bar-height) + 1.5rem + env(safe-area-inset-bottom));
+  }
+
   /* ── Bottom bar visible ── */
   .mobile-bottom-bar {
     @apply flex!;
@@ -222,7 +240,7 @@
     background: color-mix(in srgb, var(--color-sidebar-bg) 92%, transparent);
     backdrop-filter: blur(24px) saturate(1.4);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    padding-bottom: calc(var(--mobile-bottom-bar-height) + 1.5rem + env(safe-area-inset-bottom));
+    padding-bottom: var(--mobile-bar-clearance);
   }
 
   .sidebar.open {
@@ -242,13 +260,24 @@
   .main-content {
     @apply ml-0!;
     padding-top: env(safe-area-inset-top);
-    padding-bottom: calc(var(--mobile-bottom-bar-height) + 1.5rem + env(safe-area-inset-bottom));
+    padding-bottom: var(--mobile-bar-clearance);
   }
 
+  /* Default: tools extend full height, content scrolls behind the translucent bar */
   .main-content:has(> .tool-layout) {
-    height: calc(100dvh - env(safe-area-inset-top) - var(--mobile-bottom-bar-height) - 1.5rem - env(safe-area-inset-bottom)) !important;
+    height: calc(100dvh - env(safe-area-inset-top)) !important;
     margin-top: env(safe-area-inset-top);
     @apply min-h-0! pt-0 pb-0;
+  }
+
+  /* Anchored tools (chat, room): reduce height so bottom UI sits above the bar */
+  .main-content:has(> .tool-layout-anchored) {
+    height: calc(100dvh - env(safe-area-inset-top) - var(--mobile-bar-clearance)) !important;
+  }
+
+  /* Scroll areas in browsing tools: padding so last items can scroll past the bar */
+  .tool-scroll-area {
+    padding-bottom: var(--mobile-bar-clearance);
   }
 
   /* ── Re-anchor popovers to mobile bottom bar buttons ── */
@@ -301,6 +330,21 @@
 
   .edit-modal-content {
     @apply h-[55vh]! px-4! pt-4!;
+  }
+}
+
+/* PWA standalone mode: flush bottom bar like native iOS tab bar */
+@media (display-mode: standalone) and (max-width: 1023px) {
+  :root {
+    --mobile-bar-clearance: calc(var(--mobile-bottom-bar-height) + env(safe-area-inset-bottom));
+  }
+
+  .mobile-bottom-bar {
+    @apply rounded-none;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 

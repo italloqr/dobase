@@ -10,10 +10,30 @@ export default class extends Controller {
     handle: String,
     url: String,
     paramName: { type: String, default: "ids" },
-    animation: { type: Number, default: 150 }
+    animation: { type: Number, default: 150 },
+    enabled: { type: Boolean, default: true }
   }
 
   connect() {
+    if (this.enabledValue) this._createSortable()
+  }
+
+  disconnect() {
+    if (dragInProgress) return
+    this.sortable?.destroy()
+  }
+
+  enabledValueChanged(enabled) {
+    if (enabled) {
+      this._createSortable()
+    } else {
+      this.sortable?.destroy()
+      this.sortable = null
+    }
+  }
+
+  _createSortable() {
+    if (this.sortable) return
     // Skip nested sortables during drag (prevents interference)
     if (dragInProgress && this.element.closest("[data-sort-id]")) return
 
@@ -32,11 +52,6 @@ export default class extends Controller {
     }
 
     this.sortable = new Sortable(this.element, opts)
-  }
-
-  disconnect() {
-    if (dragInProgress) return
-    this.sortable?.destroy()
   }
 
   onEnd(evt) {
