@@ -23,7 +23,7 @@
   <% if @folders.any? || @files.any? %>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
       <% @folders.each do |folder| %>
-        <div class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-secondary">
+        <div class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-tertiary">
           <div class="mb-3 text-accent">
             <%= render "shared/icon", name: "folder", size: 32 %>
           </div>
@@ -35,7 +35,7 @@
       <% @files.each_with_index do |file, index| %>
         <% if file.image? %>
           <a href="<%= share_file_path(@share.token, file) %>"
-             class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-secondary"
+             class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-tertiary"
              data-action="public-gallery#openLightbox"
              data-index="<%= @images.index(file) %>">
             <div class="w-20 h-20 mb-3 rounded-lg overflow-hidden">
@@ -45,7 +45,7 @@
             <span class="text-xs text-text-tertiary mt-1"><%= file.human_file_size %></span>
           </a>
         <% else %>
-          <a href="<%= share_file_path(@share.token, file) %>" class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-secondary">
+          <a href="<%= share_file_path(@share.token, file) %>" class="flex flex-col items-center p-6 rounded-xl transition-colors hover:bg-background-tertiary">
             <div class="mb-3 text-text-tertiary">
               <%= render "shared/icon", name: file.icon_name, size: 32 %>
             </div>

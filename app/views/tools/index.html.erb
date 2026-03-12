@@ -11,7 +11,7 @@
   <div class="card">
     <div class="divide-y divide-border-light">
       <% @tools.each do |tool| %>
-        <div class="px-5 py-4 flex items-center gap-4 hover:bg-background-secondary/50 transition-colors">
+        <div class="px-5 py-4 flex items-center gap-4 hover:bg-background-tertiary/50 transition-colors">
           <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
             <%= render "shared/icon", name: tool.tool_type.icon, size: 20, class: "text-accent" %>
           </div>

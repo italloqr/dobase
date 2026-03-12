@@ -113,7 +113,7 @@ export default class extends Controller {
     return `
       <a href="${data.url}"
          data-turbo-frame="_top"
-         class="flex items-start gap-3 px-4 py-3 hover:bg-background-secondary transition-colors border-b border-border-light ${unreadClass}"
+         class="flex items-start gap-3 px-4 py-3 hover:bg-background-tertiary transition-colors border-b border-border-light ${unreadClass}"
          data-action="click->notifications#markAsRead"
          data-notification-id="${data.id}">
         <div class="flex-shrink-0 mt-0.5 text-text-secondary">

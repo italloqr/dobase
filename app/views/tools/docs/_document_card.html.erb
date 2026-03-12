@@ -35,7 +35,7 @@
   <%# List row %>
   <div data-document-id="<%= document.id %>">
     <%= link_to tool_docs_document_path(document.tool, document),
-        class: "group flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-background-secondary transition-colors" do %>
+        class: "group flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-background-tertiary transition-colors" do %>
       <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background-secondary rounded-lg text-text-tertiary group-hover:text-accent group-hover:bg-accent/10 transition-colors relative">
         <%= render "shared/icon", name: "file-text", size: 20 %>
         <span class="absolute -top-1 -right-1 w-3 h-3 bg-warning rounded-full animate-pulse <%= 'hidden' unless document.locked? %>"

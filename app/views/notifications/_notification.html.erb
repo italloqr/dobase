@@ -6,7 +6,7 @@
 %>
 <a href="<%= notification_url %>"
    data-turbo-frame="_top"
-   class="flex items-start gap-3 px-4 py-3 hover:bg-background-secondary transition-colors border-b border-border-light last:border-b-0 <%= 'bg-accent-light/30' if unread %>"
+   class="flex items-start gap-3 px-4 py-3 hover:bg-background-tertiary transition-colors border-b border-border-light last:border-b-0 <%= 'bg-accent-light/30' if unread %>"
    data-action="click->notifications#markAsRead"
    data-notification-id="<%= notification.id %>">
   <div class="flex-shrink-0 mt-0.5 text-text-secondary">

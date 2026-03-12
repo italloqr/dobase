@@ -196,7 +196,7 @@ export default class extends Controller {
 
     this.resultsTarget.innerHTML = filtered.map(contact => `
       <button type="button"
-              class="flex items-center gap-2 w-full px-3 py-2 text-left text-sm hover:bg-background-secondary transition-colors"
+              class="flex items-center gap-2 w-full px-3 py-2 text-left text-sm hover:bg-background-tertiary transition-colors"
               data-action="click->email-autocomplete#selectResult"
               data-email="${this._escapeAttr(contact.email_address)}"
               data-name="${this._escapeAttr(contact.name || "")}">

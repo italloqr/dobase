@@ -73,7 +73,7 @@
   <% if @ancestors.any? %>
     <nav class="flex items-center gap-2 px-3 sm:px-6 py-3 text-sm border-b border-border-light">
       <%= link_to tool_files_path(@tool),
-          class: "flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-accent hover:bg-background-secondary transition-all",
+          class: "flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-accent hover:bg-background-tertiary transition-all",
           data: { file_drag_target: "dropTarget", item_type: "folder", item_id: "",
                   action: "dragover->file-drag#dragOverFolder dragenter->file-drag#dragEnterFolder dragleave->file-drag#dragLeaveFolder drop->file-drag#dropOnFolder" } do %>
         <%= render "shared/icon", name: "home", size: 16 %>
@@ -84,7 +84,7 @@
           <span class="px-2 py-1 text-text-primary font-medium"><%= ancestor.name %></span>
         <% else %>
           <%= link_to ancestor.name, tool_files_path(@tool, folder_id: ancestor.id),
-              class: "px-2 py-1 rounded-lg text-text-secondary hover:text-accent hover:bg-background-secondary transition-all",
+              class: "px-2 py-1 rounded-lg text-text-secondary hover:text-accent hover:bg-background-tertiary transition-all",
               data: { file_drag_target: "dropTarget", item_type: "folder", item_id: ancestor.id,
                       action: "dragover->file-drag#dragOverFolder dragenter->file-drag#dragEnterFolder dragleave->file-drag#dragLeaveFolder drop->file-drag#dropOnFolder" } %>
         <% end %>
@@ -125,23 +125,23 @@
   <%# Context menu %>
   <div class="hidden fixed min-w-[180px] bg-surface border border-border-light rounded-lg shadow-lg py-1 z-50"
        data-file-context-menu-target="menu">
-    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-secondary transition-colors"
+    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-tertiary transition-colors"
             data-action="file-context-menu#open">
       <%= render "shared/icon", name: "external-link", size: 16 %>
       Open
     </button>
-    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-secondary transition-colors"
+    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-tertiary transition-colors"
             data-action="file-context-menu#download">
       <%= render "shared/icon", name: "download", size: 16 %>
       Download
     </button>
     <div class="h-px bg-border-light my-1 mx-2"></div>
-    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-secondary transition-colors"
+    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-tertiary transition-colors"
             data-action="file-context-menu#rename">
       <%= render "shared/icon", name: "edit-2", size: 16 %>
       Rename
     </button>
-    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-secondary transition-colors"
+    <button type="button" class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-left hover:bg-background-tertiary transition-colors"
             data-action="file-context-menu#share">
       <%= render "shared/icon", name: "share", size: 16 %>
       Share

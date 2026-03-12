@@ -1,6 +1,6 @@
 <%# Locals: email_message, is_last %>
 <div class="border-b border-border-light last:border-b-0" data-controller="collapse" data-collapse-open-value="<%= is_last %>">
-  <button type="button" class="w-full flex items-start gap-3 p-4 bg-transparent border-none cursor-pointer text-left hover:bg-background-secondary" data-action="click->collapse#toggle">
+  <button type="button" class="w-full flex items-start gap-3 p-4 bg-transparent border-none cursor-pointer text-left hover:bg-background-tertiary" data-action="click->collapse#toggle">
     <div class="w-10 h-10 rounded-full bg-accent-light flex items-center justify-center flex-shrink-0">
       <span class="text-sm font-semibold text-accent"><%= email_message.display_from.to_s[0]&.upcase %></span>
     </div>

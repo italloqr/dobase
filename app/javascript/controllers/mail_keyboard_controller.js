@@ -60,6 +60,14 @@ export default class extends Controller {
     if (link) link.click()
   }
 
+  selectItem(event) {
+    const item = event.currentTarget.closest("[data-mail-keyboard-target='item']")
+    if (!item) return
+    this.items.forEach(i => i.classList.remove("selected"))
+    item.classList.add("selected")
+    this._markItemRead(item)
+  }
+
   openSelected() {
     const selected = this.selectedItem
     if (!selected) return

@@ -47,13 +47,13 @@
           </h3>
 
           <% if @item.description.present? %>
-            <div class="text-sm text-text-primary leading-snug rich-text-content cursor-text rounded-md px-3 py-2.5 hover:bg-background-secondary transition-colors -mx-3"
+            <div class="text-sm text-text-primary leading-snug rich-text-content cursor-text rounded-md px-3 py-2.5 hover:bg-background-tertiary transition-colors -mx-3"
                  data-todo-item-target="descriptionDisplay"
                  data-action="click->todo-item#editDescription">
               <%= @item.description %>
             </div>
           <% else %>
-            <div class="text-sm text-text-tertiary/70 italic cursor-text rounded-md px-3 py-2.5 hover:bg-background-secondary hover:text-text-tertiary transition-colors -mx-3"
+            <div class="text-sm text-text-tertiary/70 italic cursor-text rounded-md px-3 py-2.5 hover:bg-background-tertiary hover:text-text-tertiary transition-colors -mx-3"
                  data-todo-item-target="descriptionDisplay"
                  data-action="click->todo-item#editDescription">
               Add a description...
@@ -140,7 +140,7 @@
           <p class="text-xs font-medium text-text-tertiary px-1 mb-1">Assignee</p>
           <div class="relative">
             <button type="button"
-                    class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-background-secondary transition-colors select-none group w-full"
+                    class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-background-tertiary transition-colors select-none group w-full"
                     commandfor="item-assignee-menu"
                     command="toggle-popover"
                     style="anchor-name: --item-assignee">
@@ -159,7 +159,7 @@
                  class="popover-menu max-h-44 overflow-y-auto"
                  style="position-anchor: --item-assignee; top: anchor(bottom); left: anchor(left); width: anchor-size(width);">
               <button type="button"
-                      class="flex items-center gap-2.5 w-full px-3 py-1.5 text-sm text-left hover:bg-background-secondary transition-colors"
+                      class="flex items-center gap-2.5 w-full px-3 py-1.5 text-sm text-left hover:bg-background-tertiary transition-colors"
                       data-action="click->todo-item#setAssignee"
                       data-user-id=""
                       data-user-name="Unassigned"
@@ -171,7 +171,7 @@
               </button>
               <% @collaborators.each do |user| %>
                 <button type="button"
-                        class="flex items-center gap-2.5 w-full px-3 py-1.5 text-sm text-left hover:bg-background-secondary transition-colors"
+                        class="flex items-center gap-2.5 w-full px-3 py-1.5 text-sm text-left hover:bg-background-tertiary transition-colors"
                         data-action="click->todo-item#setAssignee"
                         data-user-id="<%= user.id %>"
                         data-user-name="<%= user.name %>"
@@ -210,7 +210,7 @@
           <div class="space-y-1">
             <% if @item.attachments.any? %>
               <% @item.attachments.each do |attachment| %>
-                <div class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-background-secondary group transition-colors">
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-background-tertiary group transition-colors">
                   <div class="w-6 h-6 rounded bg-background-tertiary flex items-center justify-center flex-shrink-0">
                     <%= render "shared/icon", name: "paperclip", size: 12, class: "text-text-tertiary" %>
                   </div>
@@ -238,7 +238,7 @@
         <%# ── Due Date ────────────────────────────────────────────────── %>
         <div class="p-3">
           <p class="text-xs font-medium text-text-tertiary px-1 mb-1">Due date</p>
-          <label class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-background-secondary transition-colors">
+          <label class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-background-tertiary transition-colors">
             <div class="w-6 h-6 rounded-md bg-background-tertiary flex items-center justify-center flex-shrink-0">
               <%= render "shared/icon", name: "calendar", size: 13, class: "text-text-tertiary" %>
             </div>

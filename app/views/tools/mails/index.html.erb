@@ -66,7 +66,7 @@
     %>
     <div class="relative">
       <button type="button"
-              class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-background-secondary transition-colors"
+              class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-background-tertiary transition-colors"
               popovertarget="mail-folder-menu"
               style="anchor-name: --mail-folder-btn">
         <%= render "shared/icon", name: current_meta[:icon], size: 16, class: "text-text-secondary" %>
@@ -185,7 +185,7 @@
       </div>
     <% end %>
 
-    <%= form_with url: tool_bulk_path(@tool), method: :post, id: "bulk-form", data: { turbo: false } do %>
+    <%= form_with url: tool_bulk_path(@tool), method: :post, id: "bulk-form" do %>
       <input type="hidden" name="folder" value="<%= @current_folder %>">
 
       <% if @conversations.any? %>

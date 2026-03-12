@@ -4,13 +4,13 @@
 <%= form_with url: tool_mails_path(@tool), method: :post, class: "compose-layout", data: { controller: "compose" } do %>
   <!-- Top Bar -->
   <div class="flex items-center px-4 gap-3 bg-surface border-b border-border-light">
-    <%= link_to tool_mails_path(@tool), class: "flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background-secondary transition-colors" do %>
+    <%= link_to tool_mails_path(@tool), class: "flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background-tertiary transition-colors" do %>
       <%= render "shared/icon", name: "arrow-left", size: 18, class: "text-text-secondary" %>
     <% end %>
     <span class="text-sm font-semibold text-text-primary">New Message</span>
 
     <div class="flex items-center gap-2 ml-auto">
-      <%= render "components/button", text: "Discard", variant: :ghost, size: :sm, href: tool_mails_path(@tool) %>
+      <%= render "components/button", text: "Discard", variant: :ghost, size: :sm, href: tool_mails_path(@tool), data: { action: "click->compose#discard" } %>
       <%= render "components/button", text: "Send", icon: "send", size: :sm, type: :submit %>
     </div>
   </div>
@@ -102,7 +102,7 @@
 
   <!-- Bottom Bar -->
   <div class="flex items-center px-4 py-3 bg-surface border-t border-border-light gap-3">
-    <label class="flex items-center gap-2 px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-background-secondary rounded-lg cursor-pointer transition-colors">
+    <label class="flex items-center gap-2 px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-background-tertiary rounded-lg cursor-pointer transition-colors">
       <%= render "shared/icon", name: "paperclip", size: 16 %>
       <span>Attach</span>
       <input type="file"

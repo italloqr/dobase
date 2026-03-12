@@ -14,7 +14,7 @@
   }
 
   .btn-ghost {
-    @apply bg-transparent text-text-secondary hover:bg-background-secondary hover:text-text-primary active:bg-background-secondary active:text-text-primary focus-visible:ring-accent;
+    @apply bg-transparent text-text-secondary hover:bg-background-tertiary hover:text-text-primary active:bg-background-tertiary active:text-text-primary focus-visible:ring-accent;
   }
 
   .btn-danger {
@@ -31,7 +31,7 @@
 
   /* Icon Button - for toolbar actions */
   .icon-btn {
-    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary active:bg-background-tertiary active:text-text-primary transition-colors;
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:bg-background-tertiary hover:text-text-primary active:bg-background-tertiary active:text-text-primary transition-colors;
   }
 
   .icon-btn-sm {
@@ -120,11 +120,11 @@
   }
 
   .tab {
-    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors;
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:bg-background-tertiary hover:text-text-primary transition-colors;
   }
 
   .tab.active {
-    @apply bg-background-secondary text-text-primary font-medium;
+    @apply bg-background-tertiary text-text-primary font-medium;
   }
 
   /* Search Form */
@@ -364,7 +364,7 @@
     @apply flex items-center gap-3 px-4 py-2.5 text-sm text-text-primary no-underline transition-colors cursor-pointer;
   }
   .command-palette-item:hover, .command-palette-item.selected {
-    @apply bg-background-secondary;
+    @apply bg-background-tertiary;
   }
   .command-palette-item.hidden {
     @apply hidden;

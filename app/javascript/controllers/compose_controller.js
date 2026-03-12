@@ -5,6 +5,42 @@ export default class extends Controller {
 
   connect() {
     this.files = []
+    this._submitting = false
+    this._beforeUnload = (e) => {
+      if (this._hasContent() && !this._submitting) {
+        e.preventDefault()
+        e.returnValue = ""
+      }
+    }
+    this._beforeVisit = (e) => {
+      if (this._hasContent() && !this._submitting) {
+        if (!confirm("You have an unsent message. Discard it?")) {
+          e.preventDefault()
+        }
+      }
+    }
+    window.addEventListener("beforeunload", this._beforeUnload)
+    document.addEventListener("turbo:before-visit", this._beforeVisit)
+
+    this.element.addEventListener("submit", () => { this._submitting = true })
+  }
+
+  disconnect() {
+    window.removeEventListener("beforeunload", this._beforeUnload)
+    document.removeEventListener("turbo:before-visit", this._beforeVisit)
+  }
+
+  _hasContent() {
+    const form = this.element
+    const to = form.querySelector("input[name='to']")?.value?.trim()
+    const subject = form.querySelector("input[name='subject']")?.value?.trim()
+    const bodyHtml = form.querySelector("input[name='body']")?.value || ""
+    const bodyText = bodyHtml.replace(/<[^>]*>/g, "").trim()
+    return !!(to || subject || bodyText)
+  }
+
+  discard() {
+    this._submitting = true // skip confirmation
   }
 
   toggleBcc(event) {

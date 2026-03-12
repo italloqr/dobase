@@ -6,7 +6,7 @@
 %>
 <div class="mail-detail-header bg-surface border-b border-border-light px-4 py-3 flex items-center justify-between gap-4">
   <%= link_to tool_mails_path(@tool, folder: @current_folder),
-      class: "hidden max-lg:flex items-center justify-center w-8 h-8 -ml-1 rounded-lg hover:bg-background-secondary transition-colors shrink-0" do %>
+      class: "hidden max-lg:flex items-center justify-center w-8 h-8 -ml-1 rounded-lg hover:bg-background-tertiary transition-colors shrink-0" do %>
     <%= render "shared/icon", name: "arrow-left", size: 18, class: "text-text-secondary" %>
   <% end %>
   <h1 class="text-base font-semibold text-text-primary flex-1 min-w-0"><%= @selected_message.normalized_subject.presence || "(No subject)" %></h1>
