@@ -28,7 +28,7 @@ Built with Ruby on Rails 8.1, Hotwire, and Tailwind CSS.
 ### Setup
 
 ```bash
-git clone https://github.com/your-org/dobase.git
+git clone https://github.com/smgdkngt/dobase.git
 cd dobase
 bin/setup
 ```

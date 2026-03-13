@@ -46,7 +46,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Create zip files for folder downloads
-gem "rubyzip", "~> 2.3"
+gem "rubyzip", "~> 3.0"
 
 # iCalendar parsing and generation
 gem "icalendar"
@@ -91,8 +91,8 @@ group :test do
   gem "webmock"
 end
 
-gem "noticed", "~> 2.2"
+gem "noticed", "~> 3.0"
 
 # TOTP two-factor authentication
 gem "rotp", "~> 6.3"
-gem "rqrcode", "~> 2.2"
+gem "rqrcode", "~> 3.0"

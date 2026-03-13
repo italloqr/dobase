@@ -174,9 +174,9 @@ end
 
 Fire from controllers/callbacks: `CardAssignmentNotifier.with(card: card, assigner: user, tool: tool).deliver(recipient)`
 
-**Notifiers**: `ToolInvitationNotifier`, `ChatMessageNotifier`, `CardCommentNotifier`, `CardAssignmentNotifier`. All param access must be nil-safe (`&.name`, `&.title`) since referenced records can be deleted.
+**Notifiers**: `ToolInvitationNotifier`, `ChatMessageNotifier`, `CardCommentNotifier`, `CardAssignmentNotifier`, `CardMovedNotifier`, `TodoAssignmentNotifier`, `TodoCommentNotifier`, `TodoCompletedNotifier`, `FileUploadedNotifier`, `DocumentCreatedNotifier`, `CalendarEventCreatedNotifier`. All param access must be nil-safe (`&.name`, `&.title`) since referenced records can be deleted. All notifiers include `tool_id` in their `notification_data` payload for real-time sidebar activity dots.
 
-**UI**: Bell icon in sidebar with unread badge. Popover loads notification list via Turbo Frame. Stimulus `notifications_controller` subscribes to ActionCable for real-time badge updates.
+**UI**: Bell icon in sidebar with unread badge. Popover loads notification list via Turbo Frame. Stimulus `notifications_controller` subscribes to ActionCable for real-time badge updates. Sidebar tool items show an **activity dot** (`data-unread` attribute) when a tool has new content since the user's last visit — tracked via `collaborators.last_seen_at`, touched by `ApplicationController#track_last_visited_path`. Bulk detection uses `Tool.unread_tool_ids_for(user)`. Real-time dots are pushed via `tool_id` in notification payloads.
 
 ### Invitations & Collaboration
 
@@ -198,7 +198,7 @@ SMTP configured in `config/environments/production.rb` via Rails credentials (`s
 
 ### Authentication
 
-Session-based with `Current` (ActiveSupport::CurrentAttributes). `Current.user` available everywhere. Sessions stored in DB with IP/user-agent tracking.
+Session-based with `Current` (ActiveSupport::CurrentAttributes). `Current.user` available everywhere. Sessions stored in DB with IP/user-agent tracking. Optional TOTP two-factor authentication (`rotp` + `rqrcode` gems) — setup via `TwoFactorSetupsController`, challenge via `TwoFactorChallengesController`.
 
 ## Frontend
 
