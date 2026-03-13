@@ -105,10 +105,12 @@ class FilesTest < ApplicationSystemTestCase
     end
 
     within "dialog[open]" do
-      assert_selector "button", text: "Remove Share"
-      accept_confirm "Remove public access?" do
-        click_on "Remove Share"
-      end
+      click_on "Remove Share"
+    end
+
+    # Custom turbo confirm dialog
+    within "dialog#turbo-confirm-dialog" do
+      find("button[value='confirm']").click
     end
 
     sleep 0.5
