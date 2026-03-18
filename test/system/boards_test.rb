@@ -38,11 +38,14 @@ class BoardsTest < ApplicationSystemTestCase
     visit tool_board_path(@tool)
 
     click_on "Add Column"
+    assert_selector "dialog#add-column-modal[open]", wait: 5
 
     within "dialog#add-column-modal" do
       fill_in "Column name", with: "New Column Name"
       click_on "Add Column"
     end
+
+    assert_no_selector "dialog[open]", wait: 5
 
     # Column names render uppercase via CSS
     assert_text "NEW COLUMN NAME"
@@ -50,11 +53,8 @@ class BoardsTest < ApplicationSystemTestCase
 
   test "opening card detail dialog" do
     visit tool_board_path(@tool)
+    open_card(cards(:first_task))
 
-    find("[data-card-id='#{cards(:first_task).id}']").click
-
-    # Dialog content loads via fetch — wait for it
-    assert_selector "dialog[open]", wait: 5
     within "dialog[open]" do
       assert_text "First task"
       assert_text "Description" # Section header
@@ -64,9 +64,7 @@ class BoardsTest < ApplicationSystemTestCase
   test "editing card title inline" do
     visit tool_board_path(@tool)
     card = cards(:first_task)
-
-    find("[data-card-id='#{card.id}']").click
-    assert_selector "dialog[open]", wait: 5
+    open_card(card)
 
     within "dialog[open]" do
       find("[data-board-card-target='titleDisplay']").click
@@ -82,9 +80,7 @@ class BoardsTest < ApplicationSystemTestCase
 
   test "closing card dialog" do
     visit tool_board_path(@tool)
-
-    find("[data-card-id='#{cards(:first_task).id}']").click
-    assert_selector "dialog[open]", wait: 5
+    open_card(cards(:first_task))
 
     within "dialog[open]" do
       assert_text "First task"
@@ -97,9 +93,7 @@ class BoardsTest < ApplicationSystemTestCase
   test "deleting a card" do
     visit tool_board_path(@tool)
     card = cards(:first_task)
-
-    find("[data-card-id='#{card.id}']").click
-    assert_selector "dialog[open]", wait: 5
+    open_card(card)
 
     within "dialog#card-detail-modal" do
       click_on "Delete card"
@@ -129,6 +123,16 @@ class BoardsTest < ApplicationSystemTestCase
   end
 
   private
+
+  def open_card(card)
+    wait_for_turbo
+    # Card detail loads via fetch — retry click if dialog doesn't open
+    3.times do
+      find("[data-card-id='#{card.id}']").click
+      break if page.has_selector?("dialog[open] [data-controller='board-card']", wait: 5)
+    end
+    assert_selector "dialog[open] [data-controller='board-card']"
+  end
 
   def sign_in_as(user)
     visit new_session_path

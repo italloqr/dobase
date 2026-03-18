@@ -2,6 +2,24 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
+// Track Turbo navigation state for system test reliability
+document.addEventListener("turbo:load", () => {
+  document.documentElement.removeAttribute("data-turbo-not-loaded")
+  document.documentElement.removeAttribute("data-turbo-loading")
+})
+
+document.addEventListener("turbo:submit-start", (event) => {
+  if (!event.target.closest("turbo-frame")) {
+    document.documentElement.setAttribute("data-turbo-loading", "1")
+  }
+})
+
+document.addEventListener("turbo:submit-end", (event) => {
+  if (!event.detail.fetchResponse?.redirected) {
+    document.documentElement.removeAttribute("data-turbo-loading")
+  }
+})
+
 // Rich text editor (Rhino Editor — TipTap-based, ActionText compatible)
 import "rhino-editor"
 

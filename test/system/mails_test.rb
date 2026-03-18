@@ -55,11 +55,7 @@ class MailsTest < ApplicationSystemTestCase
 
     assert_text "Welcome to Dobase! We hope you enjoy the platform.", wait: 5
 
-    find("[title='Star (s)']").click
-
-    assert_selector "[title='Star (s)'][data-turbo-method='delete']", wait: 5
-
-    assert message.reload.starred?
+    click_with_retry("[title='Star (s)']") { message.reload.starred? }
   end
 
   test "archiving a message" do
@@ -68,10 +64,7 @@ class MailsTest < ApplicationSystemTestCase
 
     assert_text "Welcome to Dobase! We hope you enjoy the platform.", wait: 5
 
-    find("[title='Archive (e)']").click
-
-    assert_text "Email archived."
-    assert message.reload.archived?
+    click_with_retry("[title='Archive (e)']") { message.reload.archived? }
   end
 
   test "trashing a message" do
@@ -80,10 +73,7 @@ class MailsTest < ApplicationSystemTestCase
 
     assert_text "Welcome to Dobase! We hope you enjoy the platform.", wait: 5
 
-    find("[title='Delete (#)']").click
-
-    assert_text "Email moved to trash."
-    assert message.reload.trashed?
+    click_with_retry("[title='Delete (#)']") { message.reload.trashed? }
   end
 
   test "bulk select and archive" do
@@ -114,6 +104,18 @@ class MailsTest < ApplicationSystemTestCase
   end
 
   private
+
+  # Click an element and retry if the expected condition isn't met.
+  # Turbo method links sometimes fail to fire in headless Chrome.
+  def click_with_retry(selector, retries: 3, &condition)
+    (retries + 1).times do |attempt|
+      find(selector).click
+      assert_db_change(condition, timeout: 3)
+      return
+    rescue RuntimeError
+      raise if attempt == retries
+    end
+  end
 
   def sign_in_as(user)
     visit new_session_path

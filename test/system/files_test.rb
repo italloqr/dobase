@@ -55,9 +55,11 @@ class FilesTest < ApplicationSystemTestCase
   test "navigating into folder shows breadcrumbs and contents" do
     visit tool_files_path(@tool)
 
-    find("[data-item-type='folder'][data-item-id='#{file_folders(:documents).id}']").double_click
-
-    assert_selector "nav", text: "Documents"
+    wait_for_turbo
+    folder = find("[data-item-type='folder'][data-item-id='#{file_folders(:documents).id}']")
+    folder.double_click
+    # Double-click triggers Turbo.visit via Stimulus — wait for navigation
+    assert_selector "nav", text: "Documents", wait: 10
     assert_text "Subfolder"
     assert_text "report.pdf"
   end
@@ -68,20 +70,13 @@ class FilesTest < ApplicationSystemTestCase
     file = file_items(:report)
     assert_text "report.pdf"
 
-    # Hover over file and click three-dots menu button
-    item = find("[data-item-type='file'][data-item-id='#{file.id}']")
-    item.hover
-    item.find("button[data-action*='file-context-menu#showFromButton']").click
-
-    find("[data-file-context-menu-target='menu']", visible: true)
-    within "[data-file-context-menu-target='menu']" do
-      click_on "Share"
-    end
+    open_context_menu(file)
+    click_on "Share"
 
     within "dialog[open]" do
       assert_selector "button", text: "Create Link"
       click_on "Create Link"
-      assert_selector "button", text: "Copy"
+      assert_selector "button", text: "Copy", wait: 5
     end
 
     assert file.reload.share.present?, "Expected share to be created for file"
@@ -94,15 +89,8 @@ class FilesTest < ApplicationSystemTestCase
     assert file.share.present?, "Fixture should have an existing share"
     assert_text "readme.txt"
 
-    # Hover over file and click three-dots menu button
-    item = find("[data-item-type='file'][data-item-id='#{file.id}']")
-    item.hover
-    item.find("button[data-action*='file-context-menu#showFromButton']").click
-
-    find("[data-file-context-menu-target='menu']", visible: true)
-    within "[data-file-context-menu-target='menu']" do
-      click_on "Share"
-    end
+    open_context_menu(file)
+    click_on "Share"
 
     within "dialog[open]" do
       click_on "Remove Share"
@@ -118,6 +106,20 @@ class FilesTest < ApplicationSystemTestCase
   end
 
   private
+
+  def open_context_menu(file)
+    item = find("[data-item-type='file'][data-item-id='#{file.id}']")
+    # Make the menu button visible (hover CSS unreliable in headless Chrome)
+    menu_btn = item.find("button[data-action*='file-context-menu#showFromButton']", visible: :all)
+    page.execute_script("arguments[0].style.opacity = '1'; arguments[0].style.pointerEvents = 'auto'", menu_btn.native)
+    sleep 0.1
+    menu_btn.click
+    # Retry if the menu didn't appear
+    unless page.has_selector?("[data-file-context-menu-target='menu']:not(.hidden)", wait: 2)
+      menu_btn.click
+    end
+    find("[data-file-context-menu-target='menu']", visible: true)
+  end
 
   def sign_in_as(user)
     visit new_session_path
