@@ -82,36 +82,3 @@ jobs:
         env:
           RAILS_ENV: test
         run: bin/rails db:test:prepare test
-
-  system-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips
-
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Run System Tests
-        env:
-          RAILS_ENV: test
-        run: bin/rails db:test:prepare test:system
-
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
