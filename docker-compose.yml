@@ -12,8 +12,9 @@ services:
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USERNAME=${SMTP_USERNAME:-}
       - SMTP_PASSWORD=${SMTP_PASSWORD:-}
-      # Optional: uncomment to enable the Room (video) tool
-      # - LIVEKIT_URL=ws://livekit:7880
+      # Optional: uncomment to enable the Room (video) tool.
+      # LIVEKIT_URL must be the public URL browsers connect to.
+      # - LIVEKIT_URL=wss://room.your-domain.com
       # - LIVEKIT_API_KEY=devkey
       # - LIVEKIT_API_SECRET=devsecret
     volumes:
