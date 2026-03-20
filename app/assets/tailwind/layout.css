@@ -165,7 +165,7 @@
 
   /* Main content */
   .main-content {
-    @apply min-h-screen bg-background;
+    @apply min-h-dvh bg-background;
     margin-left: var(--sidebar-width);
     padding-right: env(safe-area-inset-right);
     padding-bottom: env(safe-area-inset-bottom);
