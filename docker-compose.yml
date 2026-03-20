@@ -12,13 +12,16 @@ services:
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USERNAME=${SMTP_USERNAME:-}
       - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      # Optional: uncomment to enable the Room (video) tool
+      # - LIVEKIT_URL=ws://livekit:7880
+      # - LIVEKIT_API_KEY=devkey
+      # - LIVEKIT_API_SECRET=devsecret
     volumes:
       - storage:/rails/storage
     restart: unless-stopped
 
   # Optional: LiveKit server for the Room (video) tool.
-  # Uncomment and add LIVEKIT_URL/LIVEKIT_API_KEY/LIVEKIT_API_SECRET
-  # to the web environment above to enable video conferencing.
+  # Uncomment above env vars and this service to enable video conferencing.
   #
   # livekit:
   #   image: livekit/livekit-server:latest
