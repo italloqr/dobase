@@ -619,6 +619,19 @@ img, svg {
   max-width: 400px;
 }
 
+.deploy-text a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 2px;
+  transition: color 150ms ease;
+}
+
+.deploy-text a:hover {
+  color: var(--accent);
+}
+
 .deploy-code {
   flex-shrink: 0;
 }
