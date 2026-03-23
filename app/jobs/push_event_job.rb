@@ -26,7 +26,12 @@ class PushEventJob < ApplicationJob
     end
   rescue CaldavSyncService::SyncError => e
     Rails.logger.error("Failed to push event #{event_id} (#{action}): #{e.message}")
-    # Could implement retry logic or mark event as needing sync
+
+    # Mark calendar as read-only if server rejects writes with 403
+    if e.message.include?("403") && event
+      event.calendar.update!(read_only: true)
+      Rails.logger.warn("Marked calendar '#{event.calendar.name}' as read-only (403 from server)")
+    end
   rescue CaldavSyncService::ConnectionError, CaldavSyncService::AuthenticationError => e
     Rails.logger.error("Connection error pushing event #{event_id}: #{e.message}")
     # Re-raise to trigger job retry
