@@ -12,7 +12,7 @@ Built with Ruby on Rails 8.1, Hotwire, and Tailwind CSS.
 |------|-------------|
 | **Mail** | IMAP/SMTP email client with rich text compose, contacts, and conversations |
 | **Board** | Kanban boards with columns, cards, comments, and attachments |
-| **Docs** | Rich text documents with real-time collaborative editing |
+| **Docs** | Rich text documents with collaborative editing |
 | **Chat** | Real-time messaging with typing indicators, replies, and file sharing |
 | **Todos** | Task lists with due dates, assignments, comments, and attachments |
 | **Files** | File storage with folders, sharing via public links, and previews |
