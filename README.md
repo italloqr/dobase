@@ -37,6 +37,31 @@ That's it. Once takes care of the rest — including SSL, persistent storage, an
 
 All tools work out of the box except the Room (video) tool, which requires an external [LiveKit](https://livekit.io) server. Once runs a single container per app, so LiveKit needs to run separately — either via [LiveKit Cloud](https://livekit.io/cloud) or as a standalone Docker container. See [Video conferencing](#video-conferencing-livekit) for setup.
 
+### Deploy with Kamal
+
+For the complete experience — SSL, zero-downtime deploys, LiveKit as an accessory — use [Kamal](https://kamal-deploy.org). All you need is a VPS with Ubuntu.
+
+```bash
+git clone https://github.com/smgdkngt/dobase.git
+cd dobase
+```
+
+Edit `config/deploy.yml` with your server IP and domain, then add secrets to `.kamal/secrets`:
+
+```bash
+# .kamal/secrets
+SECRET_KEY_BASE=<generate with: bin/rails secret>
+SMTP_USERNAME=your-smtp-user
+SMTP_PASSWORD=your-smtp-password
+```
+
+```bash
+kamal setup    # First deploy — provisions server, builds image, starts app
+kamal deploy   # Subsequent deploys
+```
+
+Kamal handles SSL certificates (Let's Encrypt), asset bridging, and rolling restarts automatically. LiveKit can run as a Kamal accessory — uncomment the `livekit` section in `config/deploy.yml`.
+
 ### Docker
 
 ```bash
@@ -188,26 +213,6 @@ bin/rails test             # Run tests
 bin/rails test:system      # Run system tests
 bin/rubocop                # Lint Ruby
 bin/brakeman --quiet       # Security analysis
-```
-
-## Deployment with Kamal
-
-For production deployments with SSL and zero-downtime deploys, Dobase ships with [Kamal](https://kamal-deploy.org) support.
-
-Edit `config/deploy.yml` with your server IP and domain, add secrets to `.kamal/secrets`:
-
-```bash
-# .kamal/secrets
-SECRET_KEY_BASE=<generate with: bin/rails secret>
-SMTP_USERNAME=your-smtp-user
-SMTP_PASSWORD=your-smtp-password
-```
-
-Then deploy:
-
-```bash
-kamal setup    # First deploy
-kamal deploy   # Subsequent deploys
 ```
 
 ## License
