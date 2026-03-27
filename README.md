@@ -217,4 +217,4 @@ bin/brakeman --quiet       # Security analysis
 
 ## License
 
-[O'Saasy License](LICENSE.md) — MIT-style with SaaS restriction. Free to use, modify, and self-host. Cannot be offered as a competing hosted service.
+[MIT License](LICENSE.md)
