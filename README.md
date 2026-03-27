@@ -4,7 +4,7 @@ An open-source, self-hosted workspace with installable tools. Add a mail client,
 
 Built with Ruby on Rails 8.1, Hotwire, and Tailwind CSS.
 
-![Dobase — Kanban board](site/screenshots/board-launch.png)
+![Dobase](site/demo.gif)
 
 ## Tools
 
