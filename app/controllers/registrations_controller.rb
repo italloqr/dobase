@@ -6,10 +6,19 @@ class RegistrationsController < ApplicationController
 
   def new
     redirect_to root_path if authenticated?
+    unless registration_allowed?
+      redirect_to login_path, alert: "Registration is by invitation only."
+      return
+    end
     @user = User.new
   end
 
   def create
+    unless registration_allowed?
+      redirect_to login_path, alert: "Registration is by invitation only."
+      return
+    end
+
     unless verify_altcha
       @user = User.new(user_params)
       flash.now[:alert] = "Please complete the verification."
@@ -32,6 +41,15 @@ class RegistrationsController < ApplicationController
   end
 
   private
+
+  def registration_allowed?
+    # Open registration when no users exist (first user setup)
+    return true if User.none?
+    # Allow registration via invitation link
+    return true if session[:pending_invitation_token].present?
+    # Otherwise closed unless explicitly enabled
+    ENV["OPEN_REGISTRATION"] == "true"
+  end
 
   def verify_altcha
     payload = params[:altcha]
