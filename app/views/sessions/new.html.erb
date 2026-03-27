@@ -41,10 +41,12 @@
     </div>
   </div>
 
-  <p class="text-center text-sm text-text-secondary mt-6">
-    Don't have an account?
-    <%= link_to "Sign up", signup_path, class: "text-accent hover:underline font-medium" %>
-  </p>
+  <% if User.none? || ENV["OPEN_REGISTRATION"] == "true" %>
+    <p class="text-center text-sm text-text-secondary mt-6">
+      Don't have an account?
+      <%= link_to "Sign up", signup_path, class: "text-accent hover:underline font-medium" %>
+    </p>
+  <% end %>
   <p class="text-center text-xs text-text-tertiary mt-4">
     Powered by <a href="https://dobase.co" class="hover:underline" target="_blank">Dobase</a>
   </p>
