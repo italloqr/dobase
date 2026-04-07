@@ -108,6 +108,16 @@ class ImapSyncService
     sync_folders
   end
 
+  def delete_message(uid, folder:)
+    connect do |imap|
+      imap.select(folder)
+      imap.uid_store(uid, "+FLAGS", [ :Deleted ])
+      imap.expunge
+    end
+  rescue StandardError => e
+    Rails.logger.error("Failed to delete email #{uid} from #{folder}: #{e.message}")
+  end
+
   def move_to_folder(uid, source_folder:, destination_folder:)
     connect do |imap|
       imap.select(source_folder)

@@ -15,6 +15,7 @@ module Tools
         folder = params[:folder] || "inbox"
         next_msg = find_next_message(@message, folder)
         @message.update!(trashed: true, archived: false)
+        sync_delete_to_imap(@message)
         redirect_to_next_mail_or_fallback(next_msg, folder: folder, notice: "Email moved to trash.")
       end
 
@@ -39,6 +40,12 @@ module Tools
 
       def set_message
         @message = @tool.mail_account.messages.find(params[:mail_id])
+      end
+
+      def sync_delete_to_imap(message)
+        return unless message.uid.present? && message.folder.present?
+        account = @tool.mail_account
+        ImapSyncService.new(account).delete_message(message.uid, folder: message.folder)
       end
     end
   end

@@ -82,10 +82,12 @@ module Tools
       folder = params[:folder] || (@message.trashed? ? "trash" : "inbox")
       next_msg = find_next_message(@message, folder)
       if @message.trashed?
+        sync_delete_to_imap(@message)
         @message.destroy
         redirect_to_next_mail_or_fallback(next_msg, folder: folder, notice: "Email permanently deleted.")
       else
         @message.update(trashed: true)
+        sync_delete_to_imap(@message)
         redirect_to_next_mail_or_fallback(next_msg, folder: folder, notice: "Email moved to trash.")
       end
     end
@@ -204,6 +206,12 @@ module Tools
         "Subject: #{ERB::Util.html_escape(message.subject)}<br>" \
         "To: #{ERB::Util.html_escape(message.to_addresses_list.join(', '))}</p>" \
         "#{forwarded}"
+    end
+
+    def sync_delete_to_imap(message)
+      return unless message.uid.present? && message.folder.present?
+      account = @tool.mail_account
+      ImapSyncService.new(account).delete_message(message.uid, folder: message.folder)
     end
   end
 end
