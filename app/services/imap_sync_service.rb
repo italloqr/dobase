@@ -170,11 +170,11 @@ class ImapSyncService
 
     if primary_folder
       # INBOX/Sent: fetch all messages (these folders are typically small)
-      uids = imap.uid_search(["ALL"])
+      uids = imap.uid_search([ "ALL" ])
     else
       # Other folders: only fetch recent messages to avoid syncing huge history
       since_date = 3.months.ago.strftime("%d-%b-%Y")
-      uids = imap.uid_search(["SINCE", since_date])
+      uids = imap.uid_search([ "SINCE", since_date ])
     end
     return if uids.empty?
 
