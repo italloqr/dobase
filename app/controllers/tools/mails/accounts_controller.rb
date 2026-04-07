@@ -67,7 +67,7 @@ module Tools
           :imap_host, :imap_port, :imap_ssl,
           :smtp_host, :smtp_port, :smtp_auth, :smtp_tls,
           :username, :password,
-          :signature, :auto_refresh_interval
+          :signature, :auto_refresh_interval, :archive_folder
         )
       end
     end

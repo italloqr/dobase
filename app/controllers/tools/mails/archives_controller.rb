@@ -15,7 +15,7 @@ module Tools
         folder = params[:folder] || "inbox"
         next_msg = find_next_message(@message, folder)
         @message.update!(archived: true)
-        sync_imap(:mark_as_read)
+        sync_archive_to_imap
         redirect_to_next_mail_or_fallback(next_msg, folder: folder, notice: "Email archived.")
       end
 
@@ -23,7 +23,7 @@ module Tools
       def destroy
         next_msg = find_next_message(@message, "archive")
         @message.update!(archived: false)
-        sync_imap(:mark_as_unread)
+        sync_unarchive_to_imap
         redirect_to_next_mail_or_fallback(next_msg, folder: "archive", notice: "Email unarchived.")
       end
 
@@ -37,9 +37,26 @@ module Tools
         @message = @tool.mail_account.messages.find(params[:mail_id])
       end
 
-      def sync_imap(action)
+      def sync_archive_to_imap
         return unless @message.uid.present?
-        ImapSyncJob.perform_later(@tool.mail_account.id, action.to_s, @message.uid, @message.folder || "INBOX")
+        account = @tool.mail_account
+        archive_folder = account.archive_folder.presence
+        if archive_folder
+          ImapSyncJob.perform_later(account.id, "move_to_folder", @message.uid, @message.folder || "INBOX", archive_folder)
+        else
+          ImapSyncJob.perform_later(account.id, "mark_as_read", @message.uid, @message.folder || "INBOX")
+        end
+      end
+
+      def sync_unarchive_to_imap
+        return unless @message.uid.present?
+        account = @tool.mail_account
+        archive_folder = account.archive_folder.presence
+        if archive_folder
+          ImapSyncJob.perform_later(account.id, "move_to_folder", @message.uid, archive_folder, "INBOX")
+        else
+          ImapSyncJob.perform_later(account.id, "mark_as_unread", @message.uid, @message.folder || "INBOX")
+        end
       end
     end
   end
