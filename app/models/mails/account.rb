@@ -21,7 +21,7 @@ module Mails
 
     validates :smtp_auth, inclusion: { in: SMTP_AUTH_METHODS }
 
-    BUILT_IN_FOLDERS = %w[INBOX Sent].freeze
+    BUILT_IN_FOLDERS = %w[INBOX Sent Drafts Trash Spam INBOX.spam INBOX.Spam Junk].freeze
 
     def custom_folders
       return [] if synced_folders.blank?
