@@ -743,28 +743,58 @@ if ENV["SEED_DEMO"]
     position: 0
   )
 
+  # Past events (last 2 weeks)
   cal.events.create!(
-    summary: "Investor Follow-up Call — North Star Ventures",
-    starts_at: 3.days.from_now.change(hour: 14),
-    ends_at: 3.days.from_now.change(hour: 15),
-    uid: SecureRandom.uuid,
-    location: "Zoom",
-    description: "Follow-up meeting with Rachel Kim to discuss seed round terms",
-    created_by: sophie,
-    updated_by: sophie
-  )
-
-  cal.events.create!(
-    summary: "Production Run #4 — CloudKitchens",
-    starts_at: 5.days.from_now.change(hour: 8),
-    ends_at: 5.days.from_now.change(hour: 16),
+    summary: "Taste Testing Session #3",
+    starts_at: 12.days.ago.change(hour: 14),
+    ends_at: 12.days.ago.change(hour: 16),
     uid: SecureRandom.uuid,
     location: "CloudKitchens Downtown, Unit 12",
-    description: "Full day production. Making 500 units of Cosmic Crunch and 300 units of Nebula Bites.",
-    created_by: sophie,
-    updated_by: sophie
+    description: "Blind taste test with 15 volunteers. Cosmic Crunch scored 9.2/10!",
+    created_by: sophie, updated_by: sophie
   )
 
+  cal.events.create!(
+    summary: "Investor Pitch — North Star Ventures",
+    starts_at: 6.days.ago.change(hour: 10),
+    ends_at: 6.days.ago.change(hour: 11, min: 30),
+    uid: SecureRandom.uuid,
+    location: "North Star Ventures, 200 Congress Ave",
+    description: "Bring samples! Rachel Kim + 2 partners attending.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "FDA Compliance Call",
+    starts_at: 4.days.ago.change(hour: 11),
+    ends_at: 4.days.ago.change(hour: 11, min: 45),
+    uid: SecureRandom.uuid,
+    description: "Review submission #FD-2026-4821 status with compliance officer",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Production Run #3",
+    starts_at: 3.days.ago.change(hour: 7),
+    ends_at: 3.days.ago.change(hour: 15),
+    uid: SecureRandom.uuid,
+    location: "CloudKitchens Downtown, Unit 12",
+    all_day: false,
+    description: "300 units Orbit Rings, 200 units Nebula Bites",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Photography Session — Product Shots",
+    starts_at: 2.days.ago.change(hour: 13),
+    ends_at: 2.days.ago.change(hour: 17),
+    uid: SecureRandom.uuid,
+    location: "Studio 54, East Austin",
+    description: "Professional product photos for website and packaging. Priya directing.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  # This week
   cal.events.create!(
     summary: "Team Standup",
     starts_at: 1.day.from_now.change(hour: 10),
@@ -772,8 +802,7 @@ if ENV["SEED_DEMO"]
     uid: SecureRandom.uuid,
     is_recurring: true,
     rrule: "FREQ=WEEKLY;BYDAY=MO,WE,FR",
-    created_by: sophie,
-    updated_by: sophie
+    created_by: sophie, updated_by: sophie
   )
 
   cal.events.create!(
@@ -782,8 +811,88 @@ if ENV["SEED_DEMO"]
     ends_at: 1.day.from_now.change(hour: 16),
     uid: SecureRandom.uuid,
     location: "PrintCo Express, 742 Evergreen Terrace",
-    created_by: sophie,
-    updated_by: sophie
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Galactic Adventures Call",
+    starts_at: 2.days.from_now.change(hour: 11),
+    ends_at: 2.days.from_now.change(hour: 12),
+    uid: SecureRandom.uuid,
+    location: "Zoom",
+    description: "Partnership discussion with Tom Bradley, CEO. Discuss stocking snacks on suborbital flights.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Investor Follow-up — North Star Ventures",
+    starts_at: 3.days.from_now.change(hour: 14),
+    ends_at: 3.days.from_now.change(hour: 15),
+    uid: SecureRandom.uuid,
+    location: "Zoom",
+    description: "Follow-up meeting with Rachel Kim to discuss seed round terms",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Lunch with Marcus — Menu Planning",
+    starts_at: 3.days.from_now.change(hour: 12),
+    ends_at: 3.days.from_now.change(hour: 13),
+    uid: SecureRandom.uuid,
+    location: "Ramen Tatsu-ya, South Lamar",
+    description: "Brainstorm new flavor ideas over ramen. Marcus's idea — obviously.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  # Next week and beyond
+  cal.events.create!(
+    summary: "Production Run #4 — CloudKitchens",
+    starts_at: 5.days.from_now.change(hour: 8),
+    ends_at: 5.days.from_now.change(hour: 16),
+    uid: SecureRandom.uuid,
+    location: "CloudKitchens Downtown, Unit 12",
+    description: "Full day production. Making 500 units of Cosmic Crunch and 300 units of Nebula Bites.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Farmers Market Pop-up",
+    starts_at: 6.days.from_now.change(hour: 8),
+    ends_at: 6.days.from_now.change(hour: 14),
+    uid: SecureRandom.uuid,
+    location: "SFC Farmers Market, Republic Square",
+    description: "First public tasting! Table + samples for all 3 flavors. Everyone attending.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Social Media Content Day",
+    starts_at: 8.days.from_now.change(hour: 10),
+    ends_at: 8.days.from_now.change(hour: 15),
+    uid: SecureRandom.uuid,
+    location: "CloudKitchens Downtown, Unit 12",
+    description: "Film TikToks and Instagram Reels. Behind-the-scenes production content.",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Accountant Meeting — Q1 Review",
+    starts_at: 10.days.from_now.change(hour: 9),
+    ends_at: 10.days.from_now.change(hour: 10),
+    uid: SecureRandom.uuid,
+    location: "Zoom",
+    description: "Review Q1 expenses, revenue projections, and tax prep",
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Food Blogger Tasting Event",
+    starts_at: 14.days.from_now.change(hour: 18),
+    ends_at: 14.days.from_now.change(hour: 21),
+    uid: SecureRandom.uuid,
+    location: "Moonshot Snacks HQ",
+    description: "Invited 8 Austin food bloggers. Full tasting menu + brand story presentation.",
+    created_by: sophie, updated_by: sophie
   )
 
   cal.events.create!(
@@ -793,8 +902,16 @@ if ENV["SEED_DEMO"]
     uid: SecureRandom.uuid,
     all_day: true,
     description: "The big day! See Launch Day Runbook in docs.",
-    created_by: sophie,
-    updated_by: sophie
+    created_by: sophie, updated_by: sophie
+  )
+
+  cal.events.create!(
+    summary: "Launch Week Retro",
+    starts_at: 24.days.from_now.change(hour: 15),
+    ends_at: 24.days.from_now.change(hour: 16, min: 30),
+    uid: SecureRandom.uuid,
+    description: "What went well? What didn't? What's next? Bring snacks (obviously).",
+    created_by: sophie, updated_by: sophie
   )
 
   puts "  Created Calendar with #{cal.events.count} events"
