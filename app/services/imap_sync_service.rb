@@ -166,9 +166,16 @@ class ImapSyncService
   end
 
   def fetch_recent_emails(imap, folder_name, limit)
-    # Search for recent emails by date, then fetch the latest N
-    since_date = 3.months.ago.strftime("%d-%b-%Y")
-    uids = imap.uid_search(["SINCE", since_date])
+    primary_folder = folder_name.in?(%w[INBOX Sent])
+
+    if primary_folder
+      # INBOX/Sent: fetch all messages (these folders are typically small)
+      uids = imap.uid_search(["ALL"])
+    else
+      # Other folders: only fetch recent messages to avoid syncing huge history
+      since_date = 3.months.ago.strftime("%d-%b-%Y")
+      uids = imap.uid_search(["SINCE", since_date])
+    end
     return if uids.empty?
 
     # Take the most recent UIDs (highest = newest)
