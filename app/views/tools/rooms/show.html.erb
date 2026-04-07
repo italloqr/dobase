@@ -33,7 +33,7 @@
   <div class="room-pre-join" data-room-target="preJoin">
     <%# Camera preview %>
     <div class="w-80 max-w-full rounded-xl overflow-hidden bg-background-secondary shadow-md">
-      <video class="w-full aspect-video object-cover bg-background-secondary"
+      <video class="w-full aspect-video object-cover object-center bg-background-secondary"
              data-room-target="previewVideo"
              autoplay playsinline muted></video>
     </div>
@@ -159,7 +159,7 @@
   <%# Participant tile template %>
   <template data-room-target="participantTemplate">
     <div class="relative bg-background-secondary rounded-xl overflow-hidden" data-participant-id="">
-      <video class="hidden w-full h-full object-cover" data-video autoplay playsinline muted></video>
+      <video class="hidden w-full h-full object-cover object-center" data-video autoplay playsinline muted></video>
       <div class="absolute inset-0 flex flex-col items-center justify-center gap-3" data-placeholder>
         <div class="w-16 h-16 rounded-full bg-background-tertiary flex items-center justify-center text-xl font-semibold text-text-primary" data-initials></div>
         <span class="text-sm text-text-secondary" data-name></span>
