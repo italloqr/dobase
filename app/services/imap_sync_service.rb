@@ -166,16 +166,15 @@ class ImapSyncService
   end
 
   def fetch_recent_emails(imap, folder_name, limit)
-    # Read EXISTS count from the already-selected mailbox rather than calling
-    # imap.status which requires the exact IMAP folder name (which may differ
-    # from the normalized folder_name we use for storage, e.g. "Sent" vs "[Gmail]/Sent Mail")
-    message_count = imap.responses("EXISTS") { |a| a.last }
-    return if message_count.nil? || message_count == 0
+    # Search for recent emails by date, then fetch the latest N
+    since_date = 3.months.ago.strftime("%d-%b-%Y")
+    uids = imap.uid_search(["SINCE", since_date])
+    return if uids.empty?
 
-    start_seq = [ message_count - limit + 1, 1 ].max
-    range = start_seq..message_count
+    # Take the most recent UIDs (highest = newest)
+    uids = uids.sort.last(limit)
 
-    messages = imap.fetch(range, [ "UID", "ENVELOPE", "FLAGS", "INTERNALDATE", "BODY.PEEK[]", "BODYSTRUCTURE" ])
+    messages = imap.uid_fetch(uids, [ "UID", "ENVELOPE", "FLAGS", "INTERNALDATE", "BODY.PEEK[]", "BODYSTRUCTURE" ])
     return unless messages
 
     messages.each do |msg|
