@@ -2,6 +2,11 @@ module ApplicationHelper
   def app_name = Rails.application.config.x.app.name
   def app_logo_path = Rails.application.config.x.app.logo_path
 
+  def absolute_url(path)
+    return path if path.start_with?("http")
+    "#{root_url.chomp('/')}#{path}"
+  end
+
   TOOL_TYPE_COLORS = {
     "mail" => "#ef4444",     # red
     "calendar" => "#f97316", # orange

@@ -3,7 +3,7 @@ You have <%= @notifications.size %> new <%= "notification".pluralize(@notificati
 
 <% @notifications.each do |notification| %>
 - <%= notification.message %>
-  <%= notification.url %>
+  <%= absolute_url(notification.url) %>
 
 <% end %>
 ---

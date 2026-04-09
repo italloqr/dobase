@@ -7,7 +7,7 @@
         <p style="margin: 0 0 4px; font-size: 15px; color: #333;">
           <%= notification.message %>
         </p>
-        <a href="<%= notification.url %>" style="font-size: 13px; color: #4F46E5; text-decoration: none;">View details &rarr;</a>
+        <a href="<%= absolute_url(notification.url) %>" style="font-size: 13px; color: #4F46E5; text-decoration: none;">View details &rarr;</a>
       </td>
     </tr>
   <% end %>
