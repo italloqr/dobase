@@ -7,7 +7,7 @@ class NotificationDigestMailer < ApplicationMailer
 
     mail(
       to: @user.email_address,
-      subject: "#{notifications.size} new #{"notification".pluralize(notifications.size)} from #{app_name}"
+      subject: "#{notifications.size} new #{"notification".pluralize(notifications.size)} from #{Rails.application.config.x.app.name}"
     )
   end
 end
