@@ -1,10 +1,27 @@
-You have <%= @notifications.size %> new <%= "notification".pluralize(@notifications.size) %>
+<%= @notifications.size %> new <%= "notification".pluralize(@notifications.size) %>
 <%= "=" * 40 %>
 
-<% @notifications.each do |notification| %>
+<%
+  grouped = @notifications.group_by { |n| n.event.params[:tool]&.name || "General" }
+%>
+<% grouped.each do |tool_name, notifications| %>
+[<%= tool_name %>]
+<% notifications.each do |notification| %>
 - <%= notification.message %>
+<%
+  params = notification.event.params
+  preview = nil
+  if params[:comment].respond_to?(:body)
+    preview = ActionController::Base.helpers.strip_tags(params[:comment].body.to_s).squish.truncate(120)
+  elsif params[:chat_message].respond_to?(:body)
+    preview = ActionController::Base.helpers.strip_tags(params[:chat_message].body.to_s).squish.truncate(120)
+  end
+%>
+<% if preview.present? %>  "<%= preview %>"
+<% end %>
   <%= absolute_url(notification.url) %>
 
 <% end %>
+<% end %>
 ---
-You can change how often you receive these emails in your profile settings.
+Change digest frequency: <%= absolute_url('/profile/edit') %>
