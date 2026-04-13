@@ -98,16 +98,16 @@
   }
 
   [data-room-mode-value="pip"] .room-content-area {
-    @apply flex-none;
+    @apply flex-none relative;
+    height: 140px;
   }
 
   [data-room-mode-value="pip"] .room-local-video {
-    @apply w-[50px] h-[50px] rounded-md border-none shadow-none
-           overflow-hidden right-1 bottom-1;
+    @apply absolute inset-0 rounded-none border-none shadow-none overflow-hidden;
   }
 
   [data-room-mode-value="pip"] .room-local-video-feed {
-    @apply w-full h-full object-cover object-center aspect-auto;
+    @apply w-full h-full object-cover object-center;
   }
 
   [data-room-mode-value="pip"] .room-controls {
