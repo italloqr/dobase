@@ -62,9 +62,23 @@
   }
 
   [data-room-mode-value="pip"] .room-pre-join,
-  [data-room-mode-value="pip"] [data-room-target="videoGrid"],
   [data-room-mode-value="pip"] [data-room-target="emptyState"] {
     @apply hidden!;
+  }
+
+  [data-room-mode-value="pip"] [data-room-target="videoGrid"] {
+    @apply grid! gap-0 p-0 h-full;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  [data-room-mode-value="pip"] [data-participant-id] {
+    @apply min-h-0 rounded-none;
+    aspect-ratio: auto;
+  }
+
+  [data-room-mode-value="pip"] [data-participant-id] [data-video] {
+    @apply object-cover object-center;
   }
 
   /* Compact topbar in PiP — acts as drag handle */
@@ -98,16 +112,17 @@
   }
 
   [data-room-mode-value="pip"] .room-content-area {
-    @apply flex-none relative;
+    @apply flex-none relative overflow-hidden;
     height: 140px;
   }
 
   [data-room-mode-value="pip"] .room-local-video {
-    @apply absolute inset-0 rounded-none border-none shadow-none overflow-hidden;
+    @apply absolute right-1 bottom-1 w-14 h-14 rounded-md border-none shadow-md
+           overflow-hidden z-10;
   }
 
   [data-room-mode-value="pip"] .room-local-video-feed {
-    @apply w-full h-full object-cover object-center;
+    @apply w-full h-full object-cover object-center aspect-auto;
   }
 
   [data-room-mode-value="pip"] .room-controls {
