@@ -102,11 +102,12 @@
   }
 
   [data-room-mode-value="pip"] .room-local-video {
-    @apply static w-full rounded-none border-none shadow-none overflow-hidden;
+    @apply w-[50px] h-[50px] rounded-md border-none shadow-none
+           overflow-hidden right-1 bottom-1;
   }
 
   [data-room-mode-value="pip"] .room-local-video-feed {
-    @apply w-full aspect-[4/3] object-cover object-center;
+    @apply w-full h-full object-cover object-center aspect-auto;
   }
 
   [data-room-mode-value="pip"] .room-controls {
