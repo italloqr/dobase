@@ -64,7 +64,7 @@
   [data-room-mode-value="pip"] .room-pre-join,
   [data-room-mode-value="pip"] [data-room-target="videoGrid"],
   [data-room-mode-value="pip"] [data-room-target="emptyState"] {
-    @apply hidden;
+    @apply hidden!;
   }
 
   /* Compact topbar in PiP — acts as drag handle */
@@ -102,11 +102,11 @@
   }
 
   [data-room-mode-value="pip"] .room-local-video {
-    @apply static w-full h-auto rounded-none border-none shadow-none overflow-hidden;
+    @apply static w-full rounded-none border-none shadow-none overflow-hidden;
   }
 
   [data-room-mode-value="pip"] .room-local-video-feed {
-    @apply w-full aspect-video object-cover object-center;
+    @apply w-full aspect-[4/3] object-cover object-center;
   }
 
   [data-room-mode-value="pip"] .room-controls {
