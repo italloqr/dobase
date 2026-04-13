@@ -73,12 +73,16 @@
   }
 
   [data-room-mode-value="pip"] [data-participant-id] {
-    @apply min-h-0 rounded-none overflow-hidden;
+    @apply min-h-0 rounded-none;
     aspect-ratio: auto;
   }
 
   [data-room-mode-value="pip"] [data-participant-id] [data-video] {
-    @apply w-full h-full object-cover object-center;
+    @apply absolute! inset-0 w-full h-full object-cover object-center;
+  }
+
+  [data-room-mode-value="pip"] [data-participant-id] [data-placeholder] {
+    @apply hidden!;
   }
 
   /* Compact topbar in PiP — acts as drag handle */
