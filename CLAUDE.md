@@ -37,9 +37,13 @@ bin/ci                     # Full CI pipeline (setup, lint, audit, tests, seeds)
 
 ```bash
 kamal deploy -d dobase     # Deploy to production (requires -d dobase destination flag)
+kamal console -d dobase    # Rails console on production
+kamal logs -d dobase       # Tail production logs
 ```
 
 The `config/deploy.yml` contains open-source placeholder values. Real production config lives in `config/deploy.dobase.yml` (the Kamal destination file). Always use `-d dobase` when deploying.
+
+Docker images are published to `ghcr.io/smgdkngt/dobase` via `.github/workflows/publish-image.yml` on push to main and CalVer tags (e.g., `2026.04.07`). Compatible with [ONCE](https://once.com) by 37signals.
 
 **Tailwind CSS** must be rebuilt after stylesheet changes:
 ```bash
@@ -135,17 +139,22 @@ end
 - **NotificationChannel** — per-user stream (`notifications:#{user.id}`) for real-time notification delivery
 - Connection authenticates via signed session cookie
 
-### Rich Text (ActionText + Lexxy)
+### Rich Text (ActionText + Rhino Editor)
 
-Lexxy gem replaces Trix. Two editor modes:
+Rhino Editor (TipTap-based) replaces Trix. Two editor modes:
 - **Full** (Docs): `.document-editor` / `.document-view` classes, large text, full toolbar
 - **Compact** (Chat/Comments): `.rich-text-input` wrapper, pruned toolbar (bold/italic/link/code), inherits font size from context
 
-Models use `has_rich_text :body`. The `rich_text_input` component wraps `rich_text_area_tag` with a Stimulus controller for enter-to-submit and toolbar pruning.
+Models use `has_rich_text :body`. The `rich_text_input` component wraps `rich_text_area_tag` with a Stimulus controller for enter-to-submit and toolbar pruning. Rhino Editor toolbar is in shadow DOM — style via `::part(toolbar)`, `::part(editor-wrapper)`. Button colors use `--rhino-button-text-color` and `--rhino-toolbar-text-color` CSS variables.
 
 ### Background Jobs
 
-Solid Queue (database-backed). Key jobs: `ImapSyncJob`, `SyncEmailsJob`, `SyncCalendarsJob`.
+Solid Queue (database-backed). Recurring jobs defined in `config/recurring.yml`:
+- `SyncAllEmailsJob` — every 5 minutes, syncs all mail accounts
+- `SyncAllCalendarsJob` — every 15 minutes, syncs all CalDAV accounts
+- `NotificationDigestJob` — every hour, sends digest emails to users with unread notifications
+
+Key jobs: `ImapSyncJob` (individual IMAP actions), `SyncEmailsJob`, `SyncCalendarsJob`, `PushEventJob` (CalDAV push), `SyncDraftJob` (draft IMAP sync).
 
 ### Notifications (Noticed gem)
 
@@ -192,13 +201,29 @@ Collaborators are always added via invitation (never direct-add). Flow:
 
 `User` model: `has_one_attached :avatar` with content type (PNG/JPEG/GIF/WebP) and size (5MB) validation. Displayed via `shared/avatar` partial with `variant(resize_to_fill: [200, 200])`. Requires `libvips` system library.
 
+### Email Tool (IMAP/SMTP)
+
+All mail actions sync to the IMAP server: trash, archive, read/unread, star, move, delete. The `ImapSyncService` handles IMAP operations; controllers call `ImapSyncJob.perform_later` for async sync. The `archive_folder` setting on `Mails::Account` determines whether archiving moves to an IMAP folder or just marks as read.
+
+Mail drafts save locally and sync to the IMAP Drafts folder via `SyncDraftJob`. The compose form uses `formaction` on the Save Draft button to submit to the drafts controller.
+
+**Important**: Never use `button_to` inside a `form_with` — it creates nested `<form>` tags which browsers break. Use `link_to` with `data-turbo-method` instead.
+
 ### Email Delivery
 
-SMTP configured in `config/environments/production.rb` via Rails credentials (`smtp.user_name`, `smtp.password`, `smtp.address`, `smtp.port`). Shared mailer layout in `app/views/layouts/mailer.html.erb`. Default from address uses `APP_FROM_EMAIL` env var.
+SMTP configured in `config/environments/production.rb` via env vars (`SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`). Shared mailer layout in `app/views/layouts/mailer.html.erb`. Default from address uses `APP_FROM_EMAIL` env var.
+
+The `app_name` helper is NOT available in mailer methods — use `Rails.application.config.x.app.name` directly. It IS available in mailer views via `helper :application`.
+
+Notification URLs from notifiers return relative paths (`/tools/26/todo`). Use the `absolute_url` helper in mailer views to prepend `root_url`.
 
 ### Authentication
 
 Session-based with `Current` (ActiveSupport::CurrentAttributes). `Current.user` available everywhere. Sessions stored in DB with IP/user-agent tracking. Optional TOTP two-factor authentication (`rotp` + `rqrcode` gems) — setup via `TwoFactorSetupsController`, challenge via `TwoFactorChallengesController`.
+
+**Registration** is invite-only by default. Open when: no users exist (first setup), user has a pending invitation token, or `OPEN_REGISTRATION=true`. ALTCHA proof-of-work widget protects signup (skipped for first user). The widget loads as a standalone script in `public/altcha.min.js` — it cannot be imported via importmap due to its embedded web worker.
+
+**SSL**: `config.force_ssl` and `config.assume_ssl` are disabled when `DISABLE_SSL=true` (ONCE sets this automatically on localhost). Session cookies do NOT set `secure:` explicitly — `force_ssl` controls this.
 
 ## Frontend
 
@@ -213,9 +238,9 @@ app/assets/tailwind/
 └── tools/             # Tool-specific styles (board.css, docs.css, etc.)
 ```
 
-**Cascade layer note:** Tailwind v4 puts component styles in `@layer components`. Unlayered styles (Tailwind utility classes in ERB, Lexxy CSS) always beat `@layer components` rules regardless of specificity. This means:
+**Cascade layer note:** Tailwind v4 puts component styles in `@layer components`. Unlayered styles (Tailwind utility classes in ERB, Rhino Editor CSS) always beat `@layer components` rules regardless of specificity. This means:
 - **Never use inline Tailwind utility classes on elements whose styles need to be overridden by `@layer components` CSS.** Instead, use semantic CSS classes (e.g., `.room-controls` instead of `flex items-center gap-2 px-4 py-3`) so that both the base style and mode-specific overrides live in the same layer and cascade normally.
-- To override Lexxy specifically, use `!important` via Tailwind's `!` suffix (e.g., `border-none!`).
+- To override Rhino Editor specifically, use `!important` via Tailwind's `!` suffix (e.g., `border-none!`).
 
 **Responsive breakpoint:** The sidebar hides at `<1024px` (`@media (max-width: 1023px)` in CSS, `max-lg:` in Tailwind utilities). Use `@media` blocks in CSS only for compound/child selectors (`.sidebar.open`, `.mail-layout > .mail-content`) that can't be expressed as Tailwind utilities. Use `max-lg:` prefix in ERB for simple single-element responsive styles.
 
@@ -294,12 +319,17 @@ link_to content, href, **html_options
 - Icons: Lucide (rendered via `shared/icon` partial)
 - Testing: Minitest with fixtures; namespaced models need `set_fixture_class` in test_helper. Fixtures bypass model callbacks, so `collaborators.yml` must have explicit owner records for every tool fixture (the `add_creator_as_owner` callback doesn't run for fixtures).
 - Ordering: position column + dedicated `PositionsController`
-- Encryption: mail/calendar passwords encrypted with Rails credentials
+- Encryption: mail/calendar passwords encrypted with `secret_key_base`
+- Importmap: all JS vendored locally (`vendor/javascript/`), no CDN dependencies. Update with `bin/importmap outdated` and `bin/importmap update`. Exception: ALTCHA lives in `public/altcha.min.js` (can't use importmap due to embedded web worker)
+- Releases: CalVer (`YYYY.MM.DD`). Create with `gh release create YYYY.MM.DD`
 - Tool creation callbacks: Board auto-creates 3 default columns; Chat auto-creates chat record; Tool adds creator as owner collaborator
 - Board deep-linking: `?card=ID` URL param auto-opens card detail modal on board page load. Notification URLs use this pattern (`tool_board_path(tool, card: card.id)`)
 - Tabs with URL persistence: `tabs_controller` reads `?tab=` query param to restore active tab across redirects. Always include `tab:` param in redirects that should preserve tab state.
 - Turbo frames in modals: Forms inside `<dialog>` should use turbo frames to update content in-place (e.g., share link appearing after creation). Use `turbo_frame: "_top"` on actions that should close the modal via full-page navigation (e.g., delete/destroy).
 - `data-turbo-permanent` elements must live **outside `<main>`** to survive Turbo navigations — Turbo replaces `<main>` content on visit. Place them as siblings of `<main>` in the layout.
+- **Turbo morph** (`turbo-refresh-method: morph` in layout) can break pages with complex dynamic content (rhino-editor, custom elements). If a page doesn't render correctly after redirect, the morph is likely dropping content. Fix by ensuring elements have stable IDs.
+- Flash messages: The `shared/flash` partial supports `position: :toast` (default, fixed bottom-right) and `position: :inline` (within forms). Auth pages (login, signup, password reset) use inline flash. The toast only renders for logged-in users.
+- `track_last_visited_path` excludes `/sync` paths to avoid polluting the redirect-after-login target.
 - Prefer CSS-driven state over JS DOM manipulation when possible. For example, use `body:has([data-some-value="active"])` to conditionally show/hide elements elsewhere in the page, rather than querying the DOM from a Stimulus controller. CSS `:has()` selectors are powerful for cross-component state.
 - Tool layout CSS: Use `auto` for topbar grid rows (not fixed px values) so they size naturally from the `tool-topbar` component. Avoid duplicate borders between adjacent elements (topbar `border-b` + content `border-t`).
 - Icons: New icons must be added to `app/views/shared/_icon.html.erb` hash — SVG paths from Lucide
