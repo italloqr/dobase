@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <% if ENV["OPEN_REGISTRATION"] == "true" %>
+  <% if ENV["OPEN_REGISTRATION"] == "true" || User.none? %>
     <p class="text-center text-sm text-text-secondary mt-6">
       Don't have an account?
       <%= link_to "Sign up", signup_path, class: "text-accent hover:underline font-medium" %>
