@@ -15,6 +15,8 @@ module Calendars
     validates :username, presence: true, unless: :local?
     validates :encrypted_password, presence: true, unless: :local?
 
+    before_validation :normalize_local_credentials
+
     PROVIDERS = %w[fastmail icloud nextcloud google custom local].freeze
 
     def local?
@@ -22,6 +24,13 @@ module Calendars
     end
 
     private
+
+    def normalize_local_credentials
+      return unless local?
+
+      self.username = "" if username.blank?
+      self.encrypted_password = "" if encrypted_password.blank?
+    end
 
     def encryption_salt
       "calendar account password"

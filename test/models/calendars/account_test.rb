@@ -40,6 +40,23 @@ module Calendars
       assert_includes account.errors[:encrypted_password], "can't be blank"
     end
 
+    test "local account saves without username or password" do
+      account = Calendars::Account.new(
+        tool: Tool.create!(
+          name: "Local-only calendar tool",
+          tool_type: tool_types(:calendar),
+          owner: users(:one)
+        ),
+        provider: "local",
+        sync_status: "pending"
+      )
+
+      assert account.save
+      assert_nil account.password
+      assert_equal "", account.username
+      assert_equal "", account.encrypted_password
+    end
+
     test "encrypts and decrypts password" do
       account = calendars_accounts(:icloud_account)
       account.password = "new-secret-password"
